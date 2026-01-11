@@ -1,0 +1,37 @@
+{
+  "products": [
+    {
+      "id": "kralovsky1",
+      "name": "Královský porcelánový set",
+      "category": "hrnky",
+      "year": "1970-1980",
+      "price": 650,
+      "description": "Elegantní porcelánový hrnek s královským designem. Autentický československý porcelán z 70. až 80. let. Luxusní vzhled s jemnými detaily.",
+      "image": "kralovsky1.jpeg",
+      "images": ["kralovsky1.jpeg", "kralovsky1-2.jpeg", "kralovsky1-3.jpeg", "kralovsky1-4.jpeg"],
+      "available": true
+    },
+    {
+      "id": "oranzovykvet1",
+      "name": "Porcelán s oranžovým květinovým vzorem",
+      "category": "hrnky",
+      "year": "1960-1970",
+      "price": 580,
+      "description": "Krásný retro porcelánový kus s výrazným oranžovým květinovým vzorem. Charakteristický design 60. až 70. let. Zachovalý stav, ideální pro sběratele.",
+      "image": "oranzovykvet1.jpeg",
+      "images": ["oranzovykvet1.jpeg", "oranzovykvet1-2.jpeg", "oranzovykvet1-3.jpeg", "oranzovykvet1-4.jpeg"],
+      "available": true
+    },
+    {
+      "id": "sadagold1",
+      "name": "Zlatá sada porcelánu",
+      "category": "hrnky",
+      "year": "1975-1985",
+      "price": 720,
+      "description": "Exkluzivní porcelánová sada s jemným zlatým vzorem. Československý porcelán z pozdního období 70. až 80. let. Elegantní a vzácný kousek.",
+      "image": "sadagold1.jpeg",
+      "images": ["sadagold1.jpeg", "sadagold1-2.jpeg", "sadagold1-3.jpeg", "sadagold1-4.jpeg"],
+      "available": true
+    }
+  ]
+}
