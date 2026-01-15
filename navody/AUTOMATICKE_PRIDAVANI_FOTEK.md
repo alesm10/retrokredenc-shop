@@ -202,9 +202,9 @@ echo Fotky zkopírovány!
 
 **Pro vás:**
 1. Fotka se automaticky objeví v `public/products/` (během 5 minut)
-2. Přejmenujte fotku podle pravidel (např. `hrnek-modry.jpg`)
-3. Upravte `products.json`
-4. Pushněte na GitHub
+2. Přejmenujte fotku podle pravidel (např. `hrnek-modry.jpg`) - pokud to ještě není správně
+3. Upravte `products.json` - přidejte nový produkt do seznamu (viz **[CO_ZNAMENA_UPRAVIT_PRODUCTS_JSON.md](CO_ZNAMENA_UPRAVIT_PRODUCTS_JSON.md)**)
+4. Pushněte na GitHub (`git add .`, `git commit -m "..."`, `git push`)
 
 ---
 
