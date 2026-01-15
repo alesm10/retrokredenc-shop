@@ -170,4 +170,41 @@ A: První fotka se zobrazí velká, ostatní jako malé náhledy pod ní. Po kli
 
 ---
 
+## 📱 Jak přidat fotky z telefonu
+
+Pokud chcete přidávat fotky přímo z telefonu, máte několik možností:
+
+### Možnost 1: Přes počítač (Nejjednodušší)
+
+1. **Připojte telefon k počítači** (USB kabel)
+2. **Zkopírujte fotky** z telefonu do složky `public/products/` na počítači
+3. **Přejmenujte fotky** podle pravidel výše
+4. **Upravte `products.json`** podle návodu výše
+
+### Možnost 2: Synology Photos (Pokud máte NAS)
+
+1. **Nainstalujte Synology Photos** na NAS
+2. **Stáhněte aplikaci Synology Photos** na telefon
+3. **Nahrajte fotky** do složky "retrokredenc" v aplikaci
+4. **Zkopírujte fotky** z NAS do `public/products/` na počítači
+5. **Upravte `products.json`**
+
+### Možnost 3: Cloud úložiště (Google Drive, Dropbox, iCloud)
+
+1. **Nahrajte fotky** z telefonu do cloud úložiště
+2. **Stáhněte fotky** na počítač
+3. **Zkopírujte do** `public/products/`
+4. **Upravte `products.json`**
+
+### Možnost 4: Email
+
+1. **Pošlete fotky** emailem na svůj email
+2. **Stáhněte přílohy** na počítači
+3. **Zkopírujte do** `public/products/`
+4. **Upravte `products.json`**
+
+**Tip:** Pro automatizaci (automatické zpracování fotek z telefonu) můžete použít n8n nebo vlastní skripty. Kontaktujte správce projektu pro více informací.
+
+---
+
 **Potřebujete pomoct?** Kontaktujte správce projektu!

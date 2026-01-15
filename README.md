@@ -18,6 +18,8 @@ npm run dev
 
 Otevřete [http://localhost:3000](http://localhost:3000) v prohlížeči.
 
+**📖 Podrobný návod:** Viz [navody/JAK_SPUSTIT.md](navody/JAK_SPUSTIT.md)
+
 ### Build pro produkci
 
 ```bash
@@ -26,7 +28,11 @@ npm run build
 
 ## 📦 Správa produktů
 
-### Jak přidat nový produkt
+**📖 Podrobné návody:**
+- [navody/SPRAVA_PRODUKTU.md](navody/SPRAVA_PRODUKTU.md) - Jak přidat a spravovat produkty
+- [navody/JAK_PRIDAT_FOTKY.md](navody/JAK_PRIDAT_FOTKY.md) - Jak přidat fotky produktů (včetně z telefonu)
+
+### Rychlý přehled
 
 1. **Přidejte fotografii produktu**
    - Vložte foto do složky `public/products/`
@@ -36,50 +42,43 @@ npm run build
 2. **Přidejte informace o produktu**
    - Otevřete soubor `src/data/products.json` v textovém editoru
    - Najděte sekci `"products": [...]`
-   - Přidejte nový objekt s informacemi o produktu:
-
-```json
-{
-  "id": "hrnek-004",
-  "name": "Název produktu",
-  "category": "hrnky",
-  "year": "1985",
-  "price": 450,
-  "description": "Popis produktu...",
-  "image": "hrnek-004.jpg",
-  "available": true
-}
-```
+   - Přidejte nový objekt s informacemi o produktu
 
 3. **Uložte soubor a nasaďte na web**
    - Pokud používáte GitHub, commitněte změny a pushněte
    - Web se automaticky aktualizuje
 
-### Kategorie produktů
+**Pro podrobné instrukce viz [navody/SPRAVA_PRODUKTU.md](navody/SPRAVA_PRODUKTU.md)**
 
-- `hrnky` - pro hrnečky
-- `talire` - pro talířky
-- Můžete přidat další kategorie podle potřeby
+## 🌐 Deployment
 
-### Formát dat produktu
+### 🚀 Vercel (doporučeno - nejjednodušší)
 
-- **id**: Jedinečný identifikátor (např. "hrnek-001")
-- **name**: Název produktu
-- **category**: Kategorie produktu
-- **year**: Rok výroby (řetězec, např. "1975")
-- **price**: Cena v Kč (číslo)
-- **description**: Popis produktu
-- **image**: Název souboru obrázku (musí být v `public/products/`)
-- **available**: `true` nebo `false` - zda je produkt dostupný
+**Nejjednodušší způsob nasazení Next.js aplikace!**
 
-## 🌐 Deployment na GitHub Pages
+- ✅ Automatické nasazení při každém push
+- ✅ HTTPS zdarma
+- ✅ Rychlý a bezplatný pro osobní projekty
+- ✅ Podpora custom domain
+
+**📖 Podrobný návod:** [navody/JAK_NASTAVIT_VERCEL.md](navody/JAK_NASTAVIT_VERCEL.md)
+
+**Rychlý start:**
+1. Vytvořte účet na [vercel.com](https://vercel.com) (přihlaste se přes GitHub)
+2. Klikněte "Add New Project" → vyberte "retrokredenc"
+3. Klikněte "Deploy"
+4. Hotovo! Web je živý na `retrokredenc.vercel.app`
+
+---
+
+### 📦 GitHub Pages
 
 **Podrobné návody:**
-- 📖 **[Kompletní návod na nastavení hostingu](NASTAVENI_HOSTINGU.md)** - krok za krokem návod pro nastavení GitHub Pages s vlastní doménou
-- 📖 **[Nastavení DNS u Wedos](DNS_WEDOS_NAVOD.md)** - podrobný návod na nastavení DNS záznamů u Wedos
+- 📖 **[Kompletní návod na nastavení hostingu](navody/NASTAVENI_HOSTINGU.md)** - krok za krokem návod pro nastavení GitHub Pages s vlastní doménou
+- 📖 **[Nastavení DNS u Wedos](navody/DNS_WEDOS_NAVOD.md)** - podrobný návod na nastavení DNS záznamů u Wedos
 
 **Rychlý přehled:**
-1. Nastavte DNS záznamy u Wedos (4 A záznamy pro GitHub Pages) - viz [DNS_WEDOS_NAVOD.md](DNS_WEDOS_NAVOD.md)
+1. Nastavte DNS záznamy u Wedos (4 A záznamy pro GitHub Pages) - viz [navody/DNS_WEDOS_NAVOD.md](navody/DNS_WEDOS_NAVOD.md)
 2. Vytvořte nový repository na GitHub
 3. Pushněte kód do repository
 4. V Settings → Pages nastavte:
@@ -90,7 +89,7 @@ npm run build
    - `NEXT_PUBLIC_FACEBOOK_URL` (volitelné)
    - `NEXT_PUBLIC_INSTAGRAM_URL` (volitelné)
 
-**Pro kompletní návod s detailními instrukcemi viz [NASTAVENI_HOSTINGU.md](NASTAVENI_HOSTINGU.md)**
+**Pro kompletní návod s detailními instrukcemi viz [navody/NASTAVENI_HOSTINGU.md](navody/NASTAVENI_HOSTINGU.md)**
 
 ## 📧 Kontaktní formulář
 
@@ -128,6 +127,7 @@ Web používá retro barevnou paletu:
 
 ```
 retrokredenc/
+├── navody/                # 📚 Všechny návody a dokumentace
 ├── public/
 │   ├── products/          # Fotky produktů
 │   └── images/            # Ostatní obrázky
@@ -138,6 +138,20 @@ retrokredenc/
 │   └── styles/            # Globální styly
 └── .github/workflows/     # GitHub Actions
 ```
+
+## 📚 Hlavní návody
+
+Všechny návody najdete ve složce **[navody/](navody/)**:
+
+- **[navody/JAK_SPUSTIT.md](navody/JAK_SPUSTIT.md)** - Jak spustit web lokálně pro testování
+- **[navody/JAK_NASTAVIT_VERCEL.md](navody/JAK_NASTAVIT_VERCEL.md)** - 🚀 Jak nasadit web na Vercel (nejjednodušší způsob)
+- **[navody/SPRAVA_PRODUKTU.md](navody/SPRAVA_PRODUKTU.md)** - Jak přidat a spravovat produkty
+- **[navody/JAK_PRIDAT_FOTKY.md](navody/JAK_PRIDAT_FOTKY.md)** - Jak přidat fotky produktů (včetně z telefonu)
+- **[navody/JAK_SDILET_S_KOLEGOU.md](navody/JAK_SDILET_S_KOLEGOU.md)** - Jak sdílet web s kolegou pro feedback a úpravy
+- **[navody/JAK_AKTUALIZOVAT_WEB.md](navody/JAK_AKTUALIZOVAT_WEB.md)** - Jak aktualizovat web na GitHub Pages
+- **[navody/JAK_OPRAVIT_CESTY_PRO_HOSTING.md](navody/JAK_OPRAVIT_CESTY_PRO_HOSTING.md)** - Jak opravit cesty pro různé hosty
+
+**📖 Kompletní seznam všech návodů:** [navody/README.md](navody/README.md)
 
 ## 🔒 Bezpečnost
 
