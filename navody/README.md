@@ -6,14 +6,16 @@ Tato složka obsahuje všechny návody a dokumentaci pro projekt Retro Kredenc.
 
 ## 🚀 Základní návody
 
+- **JAK_SPRAVOVAT_WEB.md** - ⭐ **Kompletní návod** - Jak přidávat produkty, fotky a upravovat texty (doporučeno)
 - **JAK_SPUSTIT.md** - Jak spustit web lokálně na vašem počítači
-- **JAK_PRIDAT_FOTKY.md** - Jak přidat fotky produktů
-- **SPRAVA_PRODUKTU.md** - Jak spravovat produkty na webu
+- **JAK_PRIDAT_FOTKY.md** - Jak přidat fotky produktů (podrobněji)
+- **SPRAVA_PRODUKTU.md** - Jak spravovat produkty na webu (podrobněji)
 
 ---
 
 ## 🌐 Hosting a nasazení
 
+- **JAK_NASTAVIT_VERCEL.md** - ⭐ **Jak nasadit web na Vercel** (nejjednodušší způsob)
 - **JAK_AKTUALIZOVAT_WEB.md** - Jak aktualizovat web na GitHub Pages
 - **JAK_OPRAVIT_CESTY_PRO_HOSTING.md** - Jak opravit cesty pro různé hosty (NAS, GitHub Pages, Vercel)
 - **QUICK_START_HOSTING.md** - Rychlý start pro hosting

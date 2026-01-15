@@ -143,9 +143,10 @@ retrokredenc/
 
 Všechny návody najdete ve složce **[navody/](navody/)**:
 
-- **[navody/JAK_SPUSTIT.md](navody/JAK_SPUSTIT.md)** - Jak spustit web lokálně pro testování
+- **[navody/JAK_SPRAVOVAT_WEB.md](navody/JAK_SPRAVOVAT_WEB.md)** - ⭐ **Kompletní návod** - Jak přidávat produkty, fotky a upravovat texty
 - **[navody/JAK_NASTAVIT_VERCEL.md](navody/JAK_NASTAVIT_VERCEL.md)** - 🚀 Jak nasadit web na Vercel (nejjednodušší způsob)
-- **[navody/SPRAVA_PRODUKTU.md](navody/SPRAVA_PRODUKTU.md)** - Jak přidat a spravovat produkty
+- **[navody/JAK_SPUSTIT.md](navody/JAK_SPUSTIT.md)** - Jak spustit web lokálně pro testování
+- **[navody/SPRAVA_PRODUKTU.md](navody/SPRAVA_PRODUKTU.md)** - Jak přidat a spravovat produkty (podrobněji)
 - **[navody/JAK_PRIDAT_FOTKY.md](navody/JAK_PRIDAT_FOTKY.md)** - Jak přidat fotky produktů (včetně z telefonu)
 - **[navody/JAK_SDILET_S_KOLEGOU.md](navody/JAK_SDILET_S_KOLEGOU.md)** - Jak sdílet web s kolegou pro feedback a úpravy
 - **[navody/JAK_AKTUALIZOVAT_WEB.md](navody/JAK_AKTUALIZOVAT_WEB.md)** - Jak aktualizovat web na GitHub Pages
