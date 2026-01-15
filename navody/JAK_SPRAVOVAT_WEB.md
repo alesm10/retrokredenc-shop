@@ -232,9 +232,24 @@ Před pushnutím na GitHub zkontrolujte:
 
 ---
 
+## 🗑️ Jak smazat produkt
+
+**📖 Podrobný návod:** Viz **[JAK_SMAZAT_PRODUKT.md](JAK_SMAZAT_PRODUKT.md)**
+
+**Rychlý přehled:**
+1. Otevřete `src/data/products.json`
+2. Najděte produkt, který chcete smazat
+3. Smažte celý objekt produktu (včetně čárky)
+4. Uložte soubor
+5. Pushněte na GitHub (`git add .`, `git commit -m "Smazán produkt"`, `git push`)
+
+---
+
 ## 📚 Související návody
 
+- **[JAK_SMAZAT_PRODUKT.md](JAK_SMAZAT_PRODUKT.md)** - 🗑️ **Jak smazat produkt z webu**
 - **[JAK_VYFOTIT_A_POSLAT_FOTKU.md](JAK_VYFOTIT_A_POSLAT_FOTKU.md)** - 📸 **Jak vyfotit produkt a poslat fotku z Android telefonu** (pro osoby bez technických znalostí)
+- **[CO_ZNAMENA_UPRAVIT_PRODUCTS_JSON.md](CO_ZNAMENA_UPRAVIT_PRODUCTS_JSON.md)** - Co znamená upravit products.json
 - **[JAK_PRIDAT_FOTKY.md](JAK_PRIDAT_FOTKY.md)** - Podrobnější návod na přidávání fotek
 - **[SPRAVA_PRODUKTU.md](SPRAVA_PRODUKTU.md)** - Podrobnější návod na správu produktů
 - **[JAK_NASTAVIT_VERCEL.md](JAK_NASTAVIT_VERCEL.md)** - Jak nasadit web na Vercel
