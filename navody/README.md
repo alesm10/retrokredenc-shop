@@ -7,8 +7,10 @@ Tato složka obsahuje všechny návody a dokumentaci pro projekt Retro Kredenc.
 ## 🚀 Základní návody
 
 - **JAK_SPRAVOVAT_WEB.md** - ⭐ **Kompletní návod** - Jak přidávat produkty, fotky a upravovat texty (doporučeno)
+- **JAK_SMAZAT_PRODUKT.md** - 🗑️ **Jak smazat produkt z webu** - Jednoduchý návod na odstranění produktu
 - **AUTOMATICKE_PRIDAVANI_FOTEK.md** - 🤖 **Automatické přidávání fotek** - Jak nastavit automatické workflow bez manuálního zasahování
 - **JAK_VYFOTIT_A_POSLAT_FOTKU.md** - 📸 **Jak vyfotit produkt a poslat fotku z Android telefonu** (pro osoby bez technických znalostí)
+- **CO_ZNAMENA_UPRAVIT_PRODUCTS_JSON.md** - Co znamená upravit products.json a pushnout
 - **JAK_SPUSTIT.md** - Jak spustit web lokálně na vašem počítači
 - **JAK_PRIDAT_FOTKY.md** - Jak přidat fotky produktů (podrobněji)
 - **SPRAVA_PRODUKTU.md** - Jak spravovat produkty na webu (podrobněji)

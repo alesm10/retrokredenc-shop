@@ -144,8 +144,10 @@ retrokredenc/
 Všechny návody najdete ve složce **[navody/](navody/)**:
 
 - **[navody/JAK_SPRAVOVAT_WEB.md](navody/JAK_SPRAVOVAT_WEB.md)** - ⭐ **Kompletní návod** - Jak přidávat produkty, fotky a upravovat texty
+- **[navody/JAK_SMAZAT_PRODUKT.md](navody/JAK_SMAZAT_PRODUKT.md)** - 🗑️ **Jak smazat produkt z webu** - Jednoduchý návod na odstranění produktu
 - **[navody/AUTOMATICKE_PRIDAVANI_FOTEK.md](navody/AUTOMATICKE_PRIDAVANI_FOTEK.md)** - 🤖 **Automatické přidávání fotek** - Jak nastavit automatické workflow bez manuálního zasahování
 - **[navody/JAK_VYFOTIT_A_POSLAT_FOTKU.md](navody/JAK_VYFOTIT_A_POSLAT_FOTKU.md)** - 📸 **Jak vyfotit produkt a poslat fotku z Android telefonu** (pro osoby bez technických znalostí)
+- **[navody/CO_ZNAMENA_UPRAVIT_PRODUCTS_JSON.md](navody/CO_ZNAMENA_UPRAVIT_PRODUCTS_JSON.md)** - Co znamená upravit products.json a pushnout
 - **[navody/JAK_NASTAVIT_VERCEL.md](navody/JAK_NASTAVIT_VERCEL.md)** - 🚀 Jak nasadit web na Vercel (nejjednodušší způsob)
 - **[navody/JAK_SPUSTIT.md](navody/JAK_SPUSTIT.md)** - Jak spustit web lokálně pro testování
 - **[navody/SPRAVA_PRODUKTU.md](navody/SPRAVA_PRODUKTU.md)** - Jak přidat a spravovat produkty (podrobněji)
