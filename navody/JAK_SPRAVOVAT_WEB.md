@@ -153,27 +153,18 @@ Najděte sekci s textem a upravte ho podle potřeby:
 
 ## 📸 Jak přidat fotky z telefonu
 
-### Metoda 1: Přes USB kabel (nejjednodušší)
+**📖 Podrobný návod pro fotografování a odesílání fotek:** Viz **[JAK_VYFOTIT_A_POSLAT_FOTKU.md](JAK_VYFOTIT_A_POSLAT_FOTKU.md)**
 
-1. Připojte telefon k počítači USB kabelem
-2. Otevřete složku s fotkami na telefonu
-3. Zkopírujte fotky do `public/products/` na počítači
-4. Přejmenujte fotky podle pravidel výše
-5. Upravte `products.json`
+Tento návod je určený pro osoby bez technických znalostí - obsahuje jednoduché kroky, jak vyfotit produkt na Android telefonu a kam ho poslat.
 
-### Metoda 2: Přes cloud (Google Drive, iCloud, Dropbox)
+### Rychlý přehled:
 
-1. Nahrajte fotky z telefonu do cloud úložiště
-2. Stáhněte fotky na počítač
-3. Zkopírujte do `public/products/`
-4. Přejmenujte a upravte `products.json`
-
-### Metoda 3: Přes email
-
-1. Pošlete fotky emailem na svůj email
-2. Stáhněte přílohy na počítači
-3. Zkopírujte do `public/products/`
-4. Přejmenujte a upravte `products.json`
+1. **Vyfoťte produkt** na telefonu (viz podrobný návod)
+2. **Pošlete fotku** emailem / WhatsApp / Google Drive
+3. **Stáhněte fotku** na počítači
+4. **Zkopírujte do** `public/products/`
+5. **Přejmenujte** podle pravidel výše
+6. **Upravte** `products.json`
 
 ---
 
@@ -228,6 +219,7 @@ Před pushnutím na GitHub zkontrolujte:
 
 ## 📚 Související návody
 
+- **[JAK_VYFOTIT_A_POSLAT_FOTKU.md](JAK_VYFOTIT_A_POSLAT_FOTKU.md)** - 📸 **Jak vyfotit produkt a poslat fotku z Android telefonu** (pro osoby bez technických znalostí)
 - **[JAK_PRIDAT_FOTKY.md](JAK_PRIDAT_FOTKY.md)** - Podrobnější návod na přidávání fotek
 - **[SPRAVA_PRODUKTU.md](SPRAVA_PRODUKTU.md)** - Podrobnější návod na správu produktů
 - **[JAK_NASTAVIT_VERCEL.md](JAK_NASTAVIT_VERCEL.md)** - Jak nasadit web na Vercel
