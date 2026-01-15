@@ -7,6 +7,7 @@ Tato složka obsahuje všechny návody a dokumentaci pro projekt Retro Kredenc.
 ## 🚀 Základní návody
 
 - **JAK_SPRAVOVAT_WEB.md** - ⭐ **Kompletní návod** - Jak přidávat produkty, fotky a upravovat texty (doporučeno)
+- **AUTOMATICKE_PRIDAVANI_FOTEK.md** - 🤖 **Automatické přidávání fotek** - Jak nastavit automatické workflow bez manuálního zasahování
 - **JAK_VYFOTIT_A_POSLAT_FOTKU.md** - 📸 **Jak vyfotit produkt a poslat fotku z Android telefonu** (pro osoby bez technických znalostí)
 - **JAK_SPUSTIT.md** - Jak spustit web lokálně na vašem počítači
 - **JAK_PRIDAT_FOTKY.md** - Jak přidat fotky produktů (podrobněji)

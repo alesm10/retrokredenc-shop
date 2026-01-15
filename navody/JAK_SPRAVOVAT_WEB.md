@@ -153,11 +153,26 @@ Najděte sekci s textem a upravte ho podle potřeby:
 
 ## 📸 Jak přidat fotky z telefonu
 
+### Automatické řešení (Doporučeno) ⭐
+
+**🤖 Chcete automatické řešení bez manuálního zasahování?** Viz **[AUTOMATICKE_PRIDAVANI_FOTEK.md](AUTOMATICKE_PRIDAVANI_FOTEK.md)**
+
+Tento návod ukazuje, jak nastavit automatické workflow, které přidá fotky přímo do složky `public/products/` bez manuálního kopírování.
+
+**Jak to funguje:**
+1. Žena nahraje fotku do Google Drive složky
+2. Automaticky se zkopíruje do `public/products/`
+3. Vy jen upravíte `products.json` a pushnete
+
+---
+
+### Manuální řešení
+
 **📖 Podrobný návod pro fotografování a odesílání fotek:** Viz **[JAK_VYFOTIT_A_POSLAT_FOTKU.md](JAK_VYFOTIT_A_POSLAT_FOTKU.md)**
 
 Tento návod je určený pro osoby bez technických znalostí - obsahuje jednoduché kroky, jak vyfotit produkt na Android telefonu a kam ho poslat.
 
-### Rychlý přehled:
+**Rychlý přehled:**
 
 1. **Vyfoťte produkt** na telefonu (viz podrobný návod)
 2. **Pošlete fotku** emailem / WhatsApp / Google Drive
