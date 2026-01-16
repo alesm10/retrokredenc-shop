@@ -42,9 +42,14 @@ export default function Home() {
       {/* Featured Products */}
       <section className="py-16 px-4">
         <div className="max-w-6xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-serif text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-serif text-center mb-6">
             Vybrané kousky
           </h2>
+          <p className="text-base md:text-lg text-gray-700 text-center mb-12 max-w-3xl mx-auto leading-relaxed">
+            Retro Kredenc se specializuje na prodej autentického československého porcelánu a vintage dekorací z období 50.–80. let. Každý kousek je originál, pečlivě vybraný s důrazem na design, stav a historickou hodnotu.
+            <br /><br />
+            U nás najdete retro hrnky, porcelánové sady, vázy i dekorace, které se hodí jako stylový doplněk interiéru nebo výjimečný dárek pro milovníky retra a nostalgie.
+          </p>
           <ProductGrid products={featuredProducts} />
           <div className="text-center mt-12">
             <Link href="/produkty" className="btn-primary text-lg">
