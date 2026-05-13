@@ -15,7 +15,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   const adminEmail = process.env.ADMIN_EMAIL
   const authHeader = request.headers.get('x-admin-key')
-  if (authHeader !== process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (authHeader !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
   }
 
@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   const authHeader = request.headers.get('x-admin-key')
-  if (authHeader !== process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (authHeader !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
   }
 

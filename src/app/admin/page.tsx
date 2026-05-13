@@ -3,8 +3,6 @@
 import { useState, useEffect } from 'react'
 import Image from 'next/image'
 
-const ADMIN_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-
 type Product = {
   id: string
   name: string
@@ -16,13 +14,10 @@ type Product = {
   product_images: { url: string; is_primary: boolean }[]
 }
 
-const adminKey = typeof window !== 'undefined'
-  ? localStorage.getItem('adminKey') || ''
-  : ''
-
 export default function AdminPage() {
   const [key, setKey] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
+  const [loginError, setLoginError] = useState(false)
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
@@ -43,8 +38,11 @@ export default function AdminPage() {
     if (res.ok) setProducts(await res.json())
   }
 
-  function handleLogin(e: React.FormEvent) {
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
+    setLoginError(false)
+    const res = await fetch('/api/admin', { headers: { 'x-admin-key': key } })
+    if (res.status === 401) { setLoginError(true); return }
     localStorage.setItem('adminKey', key)
     setAuthenticated(true)
     loadProducts(key)
@@ -137,6 +135,9 @@ export default function AdminPage() {
             required
             className="w-full px-4 py-2 border rounded-lg"
           />
+          {loginError && (
+            <p className="text-red-600 text-sm text-center">Špatné heslo, zkus to znovu.</p>
+          )}
           <button type="submit" className="btn-primary w-full">Přihlásit se</button>
         </form>
       </div>

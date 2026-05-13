@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase-server'
 
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('x-admin-key')
-  if (authHeader !== process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  if (authHeader !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
   }
 
