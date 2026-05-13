@@ -88,7 +88,7 @@ export default async function ProductDetailPage({ params }: Props) {
           </div>
           <div className="border-t pt-12">
             <h2 className="text-2xl font-serif mb-8 text-center">Máte zájem o tento produkt?</h2>
-            <ContactForm productId={product.id} />
+            <ContactForm productId={String(product.product_number)} />
           </div>
         </div>
       </div>
