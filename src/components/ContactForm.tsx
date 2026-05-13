@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 
 const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || ''
 
@@ -11,6 +12,7 @@ export default function ContactForm({ productId }: { productId?: string }) {
     message: '',
     product: productId || '',
   })
+  const [gdprConsent, setGdprConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -107,9 +109,27 @@ export default function ContactForm({ productId }: { productId?: string }) {
         />
       </div>
 
+      <div className="flex items-start gap-3">
+        <input
+          type="checkbox"
+          id="gdpr"
+          required
+          checked={gdprConsent}
+          onChange={(e) => setGdprConsent(e.target.checked)}
+          className="mt-1 h-4 w-4 cursor-pointer"
+        />
+        <label htmlFor="gdpr" className="text-sm text-gray-700">
+          Souhlasím se zpracováním osobních údajů dle{' '}
+          <Link href="/zasady-ochrany-osobnich-udaju" className="underline hover:text-primary" target="_blank">
+            Zásad ochrany osobních údajů
+          </Link>
+          . Údaje budou použity výhradně pro odpověď na můj dotaz. *
+        </label>
+      </div>
+
       <button
         type="submit"
-        disabled={status === 'sending'}
+        disabled={status === 'sending' || !gdprConsent}
         className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {status === 'sending' ? 'Odesílám...' : 'Odeslat zprávu'}

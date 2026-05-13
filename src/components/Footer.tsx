@@ -42,7 +42,18 @@ export default function Footer() {
             <SocialLinks />
           </div>
         </div>
-        <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60">
+        <div className="border-t border-white/20 mt-8 pt-8 text-center text-white/60 space-y-3">
+          <div className="flex flex-wrap justify-center gap-4 text-sm">
+            <Link href="/obchodni-podminky" className="hover:text-white transition-colors">
+              Obchodní podmínky
+            </Link>
+            <Link href="/reklamacni-rad" className="hover:text-white transition-colors">
+              Reklamační řád
+            </Link>
+            <Link href="/zasady-ochrany-osobnich-udaju" className="hover:text-white transition-colors">
+              Ochrana osobních údajů
+            </Link>
+          </div>
           <p>&copy; {new Date().getFullYear()} Retro Kredenc. Všechna práva vyhrazena.</p>
         </div>
       </div>
