@@ -1,11 +1,30 @@
 import Link from 'next/link'
 import ProductGrid from '@/components/ProductGrid'
 import HeroImage from '@/components/HeroImage'
-import { getProducts } from '@/data/products'
+import { createAdminClient } from '@/lib/supabase-server'
 
-export default function Home() {
-  const allProducts = getProducts()
-  const featuredProducts = allProducts.slice(0, 6)
+export const revalidate = 60
+
+export default async function Home() {
+  const supabase = createAdminClient()
+  const { data } = await supabase
+    .from('products')
+    .select('*, product_images(*)')
+    .eq('available', true)
+    .order('created_at', { ascending: false })
+    .limit(6)
+
+  const featuredProducts = (data || []).map((p: any) => ({
+    id: p.id,
+    name: p.name,
+    price: p.price,
+    category: p.category,
+    year: p.year,
+    description: p.description,
+    available: p.available,
+    image: p.product_images?.find((i: any) => i.is_primary)?.url || p.product_images?.[0]?.url || '',
+    images: p.product_images?.map((i: any) => i.url) || [],
+  }))
 
   return (
     <div>

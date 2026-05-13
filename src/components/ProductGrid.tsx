@@ -1,8 +1,7 @@
-import { Product } from '@/data/products'
 import ProductCard from './ProductCard'
 
 interface ProductGridProps {
-  products: Product[]
+  products: any[]
 }
 
 export default function ProductGrid({ products }: ProductGridProps) {
