@@ -3,8 +3,6 @@
 import { useState } from 'react'
 import Link from 'next/link'
 
-const FORMSPREE_ENDPOINT = process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT || ''
-
 export default function ContactForm({ productId }: { productId?: string }) {
   const [formData, setFormData] = useState({
     name: '',
@@ -20,7 +18,7 @@ export default function ContactForm({ productId }: { productId?: string }) {
     setStatus('sending')
 
     try {
-      const response = await fetch(FORMSPREE_ENDPOINT || 'https://formspree.io/f/your-form-id', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
