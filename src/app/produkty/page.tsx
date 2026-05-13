@@ -22,7 +22,7 @@ export default async function ProduktyPage() {
     .order('created_at', { ascending: false })
 
   const mapped = (products || []).map((p: any) => ({
-    id: p.id,
+    id: p.product_number,
     name: p.name,
     price: p.price,
     category: p.category,

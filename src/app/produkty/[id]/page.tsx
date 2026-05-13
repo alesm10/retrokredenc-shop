@@ -15,7 +15,7 @@ async function getProduct(id: string) {
   const { data } = await supabase
     .from('products')
     .select('*, product_images(*)')
-    .eq('id', id)
+    .eq('product_number', id)
     .single()
   return data
 }

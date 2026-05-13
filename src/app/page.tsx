@@ -15,7 +15,7 @@ export default async function Home() {
     .limit(6)
 
   const featuredProducts = (data || []).map((p: any) => ({
-    id: p.id,
+    id: p.product_number,
     name: p.name,
     price: p.price,
     category: p.category,
