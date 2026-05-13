@@ -40,8 +40,8 @@ export default function ZasadyOchranyPage() {
 
         <h2 className="text-2xl font-serif mt-8 mb-4">4. Příjemci osobních údajů</h2>
         <p>
-          Pro zpracování formulářů využíváme službu <strong>Formspree</strong> (Formspree, Inc.),
-          která zpracovává data v souladu s GDPR. Vaše údaje nepředáváme žádným dalším třetím stranám.
+          Vaše osobní údaje nepředáváme žádným třetím stranám. Zprávy z kontaktního formuláře
+          jsou doručovány přímo správci na e-mail uvedený v bodě 1.
         </p>
 
         <h2 className="text-2xl font-serif mt-8 mb-4">5. Doba uchovávání</h2>
