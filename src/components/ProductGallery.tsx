@@ -14,8 +14,7 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
   if (images.length === 0) return null
 
   const mainImage = images[selectedImage]
-  const isExternal = mainImage.startsWith('http')
-  const mainSrc = isExternal ? mainImage : `/products/${mainImage}`
+  const mainSrc = mainImage.startsWith('http') || mainImage.startsWith('/') ? mainImage : `/products/${mainImage}`
 
   return (
     <div>
@@ -32,7 +31,7 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
       {images.length > 1 && (
         <div className="grid grid-cols-4 gap-2">
           {images.map((img, index) => {
-            const src = img.startsWith('http') ? img : `/products/${img}`
+            const src = img.startsWith('http') || img.startsWith('/') ? img : `/products/${img}`
             return (
               <button
                 key={index}
