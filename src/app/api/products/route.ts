@@ -24,8 +24,8 @@ export async function POST(request: NextRequest) {
     await client.query('BEGIN')
 
     const { rows } = await client.query(
-      `INSERT INTO products (name, description, price, category, year, available)
-       VALUES ($1, $2, $3, $4, $5, $6)
+      `INSERT INTO products (name, description, price, category, year, available, product_number)
+       VALUES ($1, $2, $3, $4, $5, $6, (SELECT COALESCE(MAX(product_number), 0) + 1 FROM products))
        RETURNING *`,
       [productData.name, productData.description, productData.price, productData.category, productData.year, productData.available ?? true]
     )
