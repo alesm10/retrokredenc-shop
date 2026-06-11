@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import Image from 'next/image'
 
 interface Product {
   id: string
@@ -15,12 +14,11 @@ export default function ProductCard({ product }: { product: Product }) {
     <Link href={`/produkty/${product.id}`} className="card block">
       <div className="relative h-64 bg-gray-100">
         {product.image ? (
-          <Image
+          <img
             src={product.image}
             alt={product.name}
-            fill
-            className="object-cover"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="w-full h-full object-cover"
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">

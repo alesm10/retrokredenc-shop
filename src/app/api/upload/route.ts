@@ -13,11 +13,11 @@ export async function POST(request: NextRequest) {
   if (!file) return NextResponse.json({ error: 'Žádný soubor' }, { status: 400 })
 
   const fileName = `${Date.now()}-${file.name.replace(/\s/g, '_')}`
-  const uploadDir = path.join(process.cwd(), 'public', 'products')
+  const uploadDir = path.join(process.cwd(), 'uploads')
   await fs.mkdir(uploadDir, { recursive: true })
 
   const bytes = await file.arrayBuffer()
   await fs.writeFile(path.join(uploadDir, fileName), Buffer.from(bytes))
 
-  return NextResponse.json({ url: `/products/${fileName}` })
+  return NextResponse.json({ url: `/api/files/${fileName}` })
 }
