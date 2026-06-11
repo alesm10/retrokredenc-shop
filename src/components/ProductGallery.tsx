@@ -24,6 +24,7 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
           alt={`${productName} - fotka ${selectedImage + 1}`}
           fill
           className="object-cover"
+          sizes="(max-width: 768px) 100vw, 50vw"
           priority={selectedImage === 0}
         />
       </div>
@@ -48,6 +49,7 @@ export default function ProductGallery({ images, productName }: ProductGalleryPr
                   alt={`${productName} - náhled ${index + 1}`}
                   fill
                   className="object-cover"
+                  sizes="100px"
                 />
               </button>
             )
