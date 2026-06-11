@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import nodemailer from 'nodemailer'
-import { createAdminClient } from '@/lib/supabase-server'
+import { getProductName } from '@/lib/supabase-server'
 
 export async function POST(request: Request) {
   const { name, email, message, product } = await request.json()
@@ -11,12 +11,7 @@ export async function POST(request: Request) {
 
   let productInfo = ''
   if (product) {
-    const supabase = createAdminClient()
-    const { data } = await supabase
-      .from('products')
-      .select('name, product_number')
-      .eq('product_number', product)
-      .single()
+    const data = await getProductName(parseInt(product))
     productInfo = data ? `č. ${data.product_number} – ${data.name}` : `č. ${product}`
   }
 

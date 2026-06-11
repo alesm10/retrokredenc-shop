@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { createAdminClient } from '@/lib/supabase-server'
+import { getProductByNumber } from '@/lib/supabase-server'
 import ContactForm from '@/components/ContactForm'
 import ProductGallery from '@/components/ProductGallery'
 
@@ -11,13 +11,7 @@ interface Props {
 }
 
 async function getProduct(id: string) {
-  const supabase = createAdminClient()
-  const { data } = await supabase
-    .from('products')
-    .select('*, product_images(*)')
-    .eq('product_number', id)
-    .single()
-  return data
+  return getProductByNumber(parseInt(id))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -29,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       title: product.name,
       description: product.description,
-      images: product.product_images?.map((i: any) => i.url) || [],
+      images: product.product_images?.map((i) => i.url) || [],
     },
   }
 }
@@ -39,8 +33,8 @@ export default async function ProductDetailPage({ params }: Props) {
   if (!product) notFound()
 
   const images = product.product_images
-    ?.sort((a: any, b: any) => a.order_index - b.order_index)
-    .map((i: any) => i.url) || []
+    ?.sort((a, b) => a.order_index - b.order_index)
+    .map((i) => i.url) || []
 
   const jsonLd = {
     '@context': 'https://schema.org',

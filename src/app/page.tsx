@@ -1,20 +1,14 @@
 import Link from 'next/link'
 import ProductGrid from '@/components/ProductGrid'
 import HeroImage from '@/components/HeroImage'
-import { createAdminClient } from '@/lib/supabase-server'
+import { getProducts } from '@/lib/supabase-server'
 
 export const revalidate = 60
 
 export default async function Home() {
-  const supabase = createAdminClient()
-  const { data } = await supabase
-    .from('products')
-    .select('*, product_images(*)')
-    .eq('available', true)
-    .order('created_at', { ascending: false })
-    .limit(6)
+  const data = await getProducts(true, 6)
 
-  const featuredProducts = (data || []).map((p: any) => ({
+  const featuredProducts = data.map((p) => ({
     id: p.product_number,
     name: p.name,
     price: p.price,
@@ -22,8 +16,8 @@ export default async function Home() {
     year: p.year,
     description: p.description,
     available: p.available,
-    image: p.product_images?.find((i: any) => i.is_primary)?.url || p.product_images?.[0]?.url || '',
-    images: p.product_images?.map((i: any) => i.url) || [],
+    image: p.product_images?.find((i) => i.is_primary)?.url || p.product_images?.[0]?.url || '',
+    images: p.product_images?.map((i) => i.url) || [],
   }))
 
   return (
@@ -85,8 +79,8 @@ export default async function Home() {
             O nás
           </h2>
           <p className="text-lg text-gray-700 mb-8 leading-relaxed">
-            Specializujeme se na prodej autentického československého porcelánu z období 50. až 80. let. 
-            Každý kousek v naší nabídce je pečlivě vybraný a představuje kus historie, který přináší 
+            Specializujeme se na prodej autentického československého porcelánu z období 50. až 80. let.
+            Každý kousek v naší nabídce je pečlivě vybraný a představuje kus historie, který přináší
             krásu a eleganci do vašeho domova.
           </p>
           <Link href="/o-nas" className="btn-primary">

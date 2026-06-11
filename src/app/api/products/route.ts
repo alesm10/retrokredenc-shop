@@ -1,61 +1,65 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createAdminClient } from '@/lib/supabase-server'
+import pool from '@/lib/db'
+import { getProducts } from '@/lib/supabase-server'
 
 export async function GET() {
-  const supabase = createAdminClient()
-  const { data, error } = await supabase
-    .from('products')
-    .select('*, product_images(*)')
-    .order('created_at', { ascending: false })
-
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-  return NextResponse.json(data)
+  try {
+    const products = await getProducts()
+    return NextResponse.json(products)
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 })
+  }
 }
 
 export async function POST(request: NextRequest) {
-  const adminEmail = process.env.ADMIN_EMAIL
-  const authHeader = request.headers.get('x-admin-key')
-  if (authHeader !== process.env.ADMIN_PASSWORD) {
+  if (request.headers.get('x-admin-key') !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
   }
 
   const body = await request.json()
   const { images, ...productData } = body
 
-  const supabase = createAdminClient()
+  const client = await pool.connect()
+  try {
+    await client.query('BEGIN')
 
-  const { data: product, error } = await supabase
-    .from('products')
-    .insert(productData)
-    .select()
-    .single()
+    const { rows } = await client.query(
+      `INSERT INTO products (name, description, price, category, year, available)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING *`,
+      [productData.name, productData.description, productData.price, productData.category, productData.year, productData.available ?? true]
+    )
+    const product = rows[0]
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    if (images && images.length > 0) {
+      for (let i = 0; i < images.length; i++) {
+        await client.query(
+          `INSERT INTO product_images (product_id, url, is_primary, order_index) VALUES ($1, $2, $3, $4)`,
+          [product.id, images[i], i === 0, i]
+        )
+      }
+    }
 
-  if (images && images.length > 0) {
-    const imageRecords = images.map((url: string, index: number) => ({
-      product_id: product.id,
-      url,
-      is_primary: index === 0,
-      order_index: index,
-    }))
-    await supabase.from('product_images').insert(imageRecords)
+    await client.query('COMMIT')
+    return NextResponse.json(product)
+  } catch (e: any) {
+    await client.query('ROLLBACK')
+    return NextResponse.json({ error: e.message }, { status: 500 })
+  } finally {
+    client.release()
   }
-
-  return NextResponse.json(product)
 }
 
 export async function DELETE(request: NextRequest) {
-  const authHeader = request.headers.get('x-admin-key')
-  if (authHeader !== process.env.ADMIN_PASSWORD) {
+  if (request.headers.get('x-admin-key') !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
   }
 
   const { id } = await request.json()
-  const supabase = createAdminClient()
-
-  const { error } = await supabase.from('products').delete().eq('id', id)
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 })
-
-  return NextResponse.json({ success: true })
+  try {
+    await pool.query('DELETE FROM products WHERE id = $1', [id])
+    return NextResponse.json({ success: true })
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 })
+  }
 }
