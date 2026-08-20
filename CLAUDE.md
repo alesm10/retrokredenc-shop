@@ -14,7 +14,7 @@ Tenhle projekt má **tři místa, ne dvě**:
 | Kde | Co to je |
 |---|---|
 | **Mac** (`~/Data/retrokredenc`) | tady se píše |
-| **GitHub** `alesm10/retrokredenc-shop` | záloha historie |
+| **GitHub** `alesm10/retrokredenc-shop` | záloha historie — ⚠ **veřejný repozitář** |
 | **VPS** `alesvps@152.239.117.152:~/retrokredenc-shop` | ⚠ **živý web zákazníků** |
 
 **Push na GitHub není nasazení. A `git pull` z GitHubu nestačí** — server může
@@ -57,24 +57,14 @@ Návody psané pro člověka, ne pro Clauda, jsou ve složce `navody/`.
 ## Nástrahy, které tenhle repozitář má
 
 Projekt prošel migrací ze Supabase na vlastní PostgreSQL a **zbytky po ní jsou
-pořád vidět.** Než se na něco spolehneš, ověř to:
+pořád vidět** — soubor, který se jmenuje `supabase-server.ts` a mluví
+s PostgreSQL; mrtvá vrstva `products.json`, ze které ale pořád čte `sitemap.ts`;
+nasazovací workflow na GitHub Pages, kde web nežije; statický export ve složce
+`retrokredenc/`. Všechno i s dopadem je v **`GOTCHAS.md`** — než se na cokoli
+z toho spolehneš, přečti to.
 
-- **`src/lib/supabase-server.ts` už se Supabase nemluví** — uvnitř je čistý
-  PostgreSQL (`pg`). Jméno souboru lže, obsah je pravda.
-- **Supabase balíčky jsou dál v `package.json`**, i když je aplikace nepoužívá.
-- **`src/data/products.json` je mrtvá vrstva z doby před databází** — jenže
-  `src/app/sitemap.ts` z ní pořád čte, takže mapa webu neodpovídá skutečnému
-  zboží. Zmíněno, neopraveno; oprava je vlastní zadání.
-- **`.github/workflows/deploy.yml` nasazuje na GitHub Pages**, kde web nežije
-  a kde by ani žít nemohl (aplikace potřebuje databázi a API). Zbytek
-  z počátků projektu.
-- **`.env.local` na Macu je z 13. 5. 2026** a nese ještě Supabase klíče. Živá
-  pravda o konfiguraci je na serveru, ne tady.
-- **Složka `retrokredenc/` uvnitř repozitáře** je starý statický export webu.
-  Není to zdrojový kód — needituj ji.
-
-Mrtvý kód **zmiň, nemaž.** Úklid těchhle věcí je samostatné rozhodnutí, ne
-vedlejší efekt jiné práce.
+Mrtvý kód **zmiň, nemaž.** Úklid je samostatné rozhodnutí, ne vedlejší efekt
+jiné práce.
 
 ## Jak tady pracovat
 
