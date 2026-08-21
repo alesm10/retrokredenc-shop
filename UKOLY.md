@@ -19,29 +19,22 @@ Aleš plánuje, až bude čas. Do té doby se web nepředělává po kouskách.
 
 ---
 
-## 0. ⚠ Tajný klíč Supabase natvrdo ve skriptu — přednostní
+## 0. ✅ Tajný klíč Supabase — vyřešeno 21. 8. 2026
 
-**Nalezeno 20. 8. 2026.** Soubor `scripts/migrate-products.mjs` (rozdělaná
-práce, nikdy nezapsaná do gitu) má **tajný klíč k Supabase napsaný přímo
-v kódu**, ne v `.env.local`.
+Ve `scripts/migrate-products.mjs` ležel klíč k Supabase v otevřeném textu.
+Skript nikdy nebyl v gitu, ale repozitář je veřejný a `.gitignore` ho nekryl.
 
-**Proč to spěchá i přes malou hodnotu webu:** tenhle repozitář je na GitHubu
-**veřejný** a `.gitignore` ten soubor nepokrývá. Jediné `git add -A` a klíč je
-venku pro kohokoli. Ověřeno, že se to zatím nestalo — v historii gitu soubor
-není. A klíč platí pro **celý projekt v Supabase**, ne jen pro tenhle web.
+**Ukázalo se, že klíč už nic neodemyká.** Projekt v Supabase neexistuje —
+jeho adresa se nedá ani přeložit (`NXDOMAIN`), a Aleš potvrdil z účtu, že
+v organizaci `alesm10's Org` **není ani jeden projekt** a spotřeba je nulová.
+Rotovat tedy nebylo co.
 
-**Co udělat, v tomhle pořadí:**
+**Hotovo:** skript smazán. Ověřeno, že v repozitáři nezůstal žádný zapsaný
+klíč — `src/lib/supabase.ts` obsahuje jen názvy proměnných (`process.env`),
+ne hodnoty. Živý web na VPS nemá v konfiguraci ani jednu proměnnou Supabase.
 
-1. **Zneplatnit klíč v Supabase** (Project Settings → API → rotace klíče).
-   Smazat soubor nestačí — klíč platí, dokud ho nezruší ten, kdo ho vydal.
-2. Rozhodnout, co se skriptem: převod dat ze Supabase na PostgreSQL už
-   proběhl, takže je nejspíš k ničemu → **smazat**. Když má ještě dobíhat,
-   přepsat ho tak, aby klíč bral z `process.env`, a přidat do `.gitignore`.
-3. Ověřit, jestli projekt v Supabase ještě existuje a jestli v něm nezůstala
-   data. Když nezůstala, **zrušit ho celý** — nebude co unikat a odpadne
-   i bod 2.
-
-⚠ Do vyřešení **nepouštět `git add -A`** v tomhle repozitáři.
+Poučení: **mrtvý klíč vypadá pro nálezce stejně jako živý.** Odklidit se má
+tak jako tak.
 
 ## 1. ⚠ Vyměnit heslo do administrace — přednostní
 
