@@ -53,6 +53,35 @@ ověřit, teprve pak zahodit staré.
 
 ---
 
+## 1b. WEDOS Global Protection — ⏰ rozhodnout do 14. 9. 2026
+
+**Došlo 21. 8. 2026.** WEDOS oznámil, že neuhrazenou službu *Global Protection*
+pro `retrokredenc.cz` od 15. 9. postupně vypne a 25. 9. zruší úplně.
+
+**Doporučení: neplatit.** Ověřeno zvenčí, že ta ochrana **není v cestě provozu**:
+
+| Kontrola | Zjištění |
+|---|---|
+| `retrokredenc.cz` ukazuje na | `152.239.117.152` — vlastní VPS |
+| Certifikát | Let's Encrypt vydaný přímo pro doménu (proxy by měla svůj) |
+| Hlavička odpovědi | `nginx/1.24.0 (Ubuntu)`, žádná stopa po proxy |
+| Přístup přímo na IP serveru | funguje |
+
+Kdyby web přes WGP tekl, ukazovala by doména na jejich adresy. Věta v mailu
+o nedostupnosti webu i pokyn „přesměrujte DNS na vlastní server" míří na
+zákazníky, kteří ochranu skutečně používají.
+
+⚠ **Co ověřit v administraci** (`client.wedos.com`, adresu si napsat ručně,
+neklikat na odkaz v mailu): že **DNS zóna je vedená pod doménou, ne pod Global
+Protection**. Nameservery jsou `ns.wedos.com/.net/.cz/.eu`, což je běžná správa
+domény — vypnutí WGP by se jich dotknout nemělo.
+
+Kdyby se ukázalo, že zóna na WGP visí, je potřeba **do 21. 9.** přesměrovat
+záznamy na `152.239.117.152`.
+
+**Kdyby ochrana někdy byla potřeba:** Cloudflare umí totéž zdarma. Teď není
+co chránit — žádné platby, žádné objednávky, web se nepoužívá.
+
 ## 2. Administrace nemá ochranu proti hádání hesla
 
 **Otevřené od 18. 8. 2026.** Přihlášení porovná hlavičku `x-admin-key` s
