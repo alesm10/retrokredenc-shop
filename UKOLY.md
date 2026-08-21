@@ -96,29 +96,23 @@ přitom čte z PostgreSQL přes `src/lib/supabase-server.ts`.
 v `package.json` nic nepohánějí a `.github/workflows/deploy.yml` nasazuje na
 GitHub Pages, kde web nežije. Podrobně v `GOTCHAS.md`.
 
-## 5. Záloha na NAS — třetí kopie obnovena, automatika ještě ne
+## 5. ✅ Záloha na NAS — vyřešeno 21. 8. 2026
 
-**Zjištěno 21. 8. 2026, částečně vyřešeno.** Kopie záloh na NAS tři dny
-(18.–20. 8.) neprošla a nikdo o tom nevěděl — chyba skončila řádkou v logu.
+Kopie záloh na NAS tři dny (18.–20. 8.) neprošla a nikdo o tom nevěděl.
 
-**Příčina nebyla na NASu.** `Operation not permitted` vydává macOS: programy
-nesmí na síťové svazky bez **Plného přístupu k disku**. Finder ho má,
-spouštěná úloha ne. Poznávací znamení: nejdou ani ostatní síťové svazky,
-zatímco místní disk funguje.
+**Příčina nebyla na NASu.** `Operation not permitted` na síťovém svazku vydává
+macOS — programy tam nesmí bez Plného přístupu k disku. Finder ho má, úloha na
+pozadí ne.
 
-**Hotovo:** zálohy z 18.–21. 8. včetně dnešní ručně zkopírovány na NAS
-a ověřeny kontrolními součty. Skript `~/Data/_zalohy/stahni-zalohy.sh`
-přepsán — sám se připojí, pozná mrtvé připojení, respektuje provozní dobu
-NASu (9:00–22:00) a **selhání hlásí systémovým upozorněním**, ne jen do logu.
+**Řešení: Mac je z cesty pryč.** NAS si zálohy stahuje z VPS sám (Plánovač úloh
+DSM, denně v 10:00, vlastní SSH klíč). Mac si je stahuje nezávisle ve 20:00.
+Tři kopie, dvě nezávislé cesty — když jedna vypadne, druhá jede dál.
 
-**Zbývá rozhodnout, jak dál s automatikou ve 20:00:**
+Ověřeno kontrolními součty: všech 13 souborů na NASu sedí s VPS.
 
-1. **Rychlá cesta:** přidat `/bin/bash` do Plného přístupu k disku. Funguje
-   hned, ale dává plný přístup k disku všemu, co se přes bash spustí.
-2. ⭐ **Lepší cesta: vyřadit Mac z řetězu.** Teď to jde VPS → Mac → NAS
-   a prostřední článek je zapnutý jen občas. **Synology si zálohy umí stáhnout
-   z VPS sám** naplánovanou úlohou a je zapnutý 9:00–22:00. Mac by z rovnice
-   vypadl i s celou touhle třídou problémů. Půl hodiny práce v DSM.
+**Kontrola, když bude potřeba:**
+- NAS: `Projekty/Retrokredenc/zaloha-z-vps.log`
+- Mac: `tail -5 ~/Data/_zalohy/stahovani.log` — a při selhání navíc vyskočí
+  systémové upozornění
 
-Do rozhodnutí platí: **záloha na NAS se musí hlídat ručně** — `tail -5
-~/Data/_zalohy/stahovani.log`.
+Nastavení celé úlohy: AIOS → `infrastruktura/VYSTUPY/nas-stahuje-zalohy-z-vps.md`.
