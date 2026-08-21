@@ -65,21 +65,38 @@ po několika pokusech za sebou. Stačí jednoduché počítadlo podle IP adresy.
 
 Patří do kompletní revize webu.
 
-## 3. Mapa webu čte ze staré `products.json` místo z databáze
+## 3. Mapa webu ukazuje na neexistující stránky — a ty vracejí chybu
 
-**Nalezeno 20. 8. 2026. Dopad: Google nevidí nové zboží.**
+**Nalezeno 20. 8., rozsah upřesněn 21. 8. 2026.**
 
-`src/app/sitemap.ts` importuje `getProducts` z `@/data/products`, což je
-statická vrstva z doby před databází (`src/data/products.json`). Zbytek webu
-přitom čte z PostgreSQL přes `src/lib/supabase-server.ts`.
+`src/app/sitemap.ts` čte zboží ze staré statické vrstvy `src/data/products.json`,
+zatímco zbytek webu čte z databáze. A ta dvě místa mají **úplně jiná ID**:
+
+| Kde | Jak vypadá ID |
+|---|---|
+| `products.json` (mrtvá vrstva) | `kralovsky1`, `oranzovykvet1`, `sadagold1` |
+| databáze (skutečnost) | UUID — `7e28bb42-e931-…` |
+
+**Dopad je dvojí a ten druhý je horší:**
+
+1. Google nevidí zboží přidané přes administraci.
+2. **Sitemap Googlu nabízí tři adresy, které neexistují.** Při jejich procházení
+   se textové ID překládá na číslo, vyjde `NaN`, dotaz do databáze spadne
+   a server vrátí chybu. V logu je **92 výskytů**, poslední 21. 8. Chyba serveru
+   je pro vyhledávač horší signál než chybějící stránka.
 
 **Co udělat:**
 
 1. Přepsat `sitemap.ts`, ať bere zboží ze stejného zdroje jako zbytek webu
    (`getProducts` z `@/lib/supabase-server`, je `async`).
-2. Ověřit `/sitemap.xml` po sestavení — musí obsahovat produkt přidaný
-   přes administraci.
-3. Teprve pak zvážit smazání `src/data/products.json` a `products.ts`.
+2. **Ošetřit `/produkty/[id]` na neznámé ID** — má vrátit „nenalezeno" (404),
+   ne spadnout. Teď si kdokoli vymyslí adresu a vyrobí chybu v logu.
+3. Ověřit `/sitemap.xml` po sestavení — musí obsahovat produkt přidaný přes
+   administraci a žádnou z těch tří starých adres.
+4. Teprve pak zvážit smazání `src/data/products.json` a `products.ts`.
+
+Kontrola, jestli chyby ustaly:
+`ssh alesvps@152.239.117.152 "grep -c NaN ~/.pm2/logs/retrokredenc-error.log"`
 
 ⚠ Nasazuje se na VPS, ne přes GitHub — viz `GOTCHAS.md`.
 
