@@ -2,6 +2,22 @@
 
 > Věci, které jsou známé a odložené. Když se něco vyřeší, škrtnout a napsat
 > kdy. Nálezy bez rozhodnutí patří do `GOTCHAS.md`, ne sem.
+>
+> **Tenhle seznam je jediné místo, kde tyhle úkoly žijí.** V AIOS se
+> nepřipomínají — patří k webu, ne do druhého mozku.
+
+## Jak se na ten web zatím dívat (rozhodnuto 21. 8. 2026)
+
+Web je veřejně dostupný, ale **Verča ho zatím nepoužívá** a žádný skutečný
+provoz na něm neběží. Kdyby se někdo dostal do administrace, škoda by byla
+malá — nejsou tam objednávky ani platby, jen zboží a fotky, které existují
+i jinde.
+
+Z toho plyne priorita: **body 0 a 1 vyřešit, protože se týkají klíčů, které
+platí i mimo tenhle web.** Zbytek počká na **kompletní revizi webu**, kterou
+Aleš plánuje, až bude čas. Do té doby se web nepředělává po kouskách.
+
+---
 
 ## 0. ⚠ Tajný klíč Supabase natvrdo ve skriptu — přednostní
 
@@ -9,9 +25,10 @@
 práce, nikdy nezapsaná do gitu) má **tajný klíč k Supabase napsaný přímo
 v kódu**, ne v `.env.local`.
 
-**Proč to spěchá:** tenhle repozitář je na GitHubu **veřejný** a soubor
-`.gitignore` ho nepokrývá. Jediné `git add -A` a klíč je venku pro kohokoli.
-Ověřeno, že se to zatím nestalo — v historii gitu soubor není.
+**Proč to spěchá i přes malou hodnotu webu:** tenhle repozitář je na GitHubu
+**veřejný** a `.gitignore` ten soubor nepokrývá. Jediné `git add -A` a klíč je
+venku pro kohokoli. Ověřeno, že se to zatím nestalo — v historii gitu soubor
+není. A klíč platí pro **celý projekt v Supabase**, ne jen pro tenhle web.
 
 **Co udělat, v tomhle pořadí:**
 
@@ -21,11 +38,41 @@ Ověřeno, že se to zatím nestalo — v historii gitu soubor není.
    proběhl, takže je nejspíš k ničemu → **smazat**. Když má ještě dobíhat,
    přepsat ho tak, aby klíč bral z `process.env`, a přidat do `.gitignore`.
 3. Ověřit, jestli projekt v Supabase ještě existuje a jestli v něm nezůstala
-   data. Když nezůstala, zrušit ho celý — nebude co unikat.
+   data. Když nezůstala, **zrušit ho celý** — nebude co unikat a odpadne
+   i bod 2.
 
-⚠ Do té doby **nepouštět `git add -A`** v tomhle repozitáři.
+⚠ Do vyřešení **nepouštět `git add -A`** v tomhle repozitáři.
 
-## 1. Mapa webu čte ze staré `products.json` místo z databáze
+## 1. ⚠ Vyměnit heslo do administrace — přednostní
+
+**Otevřené od 20. 8. 2026.** Heslo leželo v otevřeném textu v poznámkovém
+souboru (`gotchas.md` ve složce `Cursor vibecoding`) a při práci s ním se
+dostalo i do transkriptu Claude Code na disku. Soubor je smazaný, ale to
+heslo nezneplatní.
+
+Je tady i druhý důvod, proč to nenechat ležet: **stejné nebo podobné heslo
+se snadno používá i jinde.** Únik z bezvýznamného webu pak přestane být
+bezvýznamný.
+
+Postup je v AIOS: `.claude/skills/hesla-a-klice/`. Pořadí je důležité —
+nasadit nové na VPS, restartovat `pm2 restart retrokredenc --update-env`,
+ověřit, teprve pak zahodit staré.
+
+---
+
+## 2. Administrace nemá ochranu proti hádání hesla
+
+**Otevřené od 18. 8. 2026.** Přihlášení porovná hlavičku `x-admin-key` s
+`process.env.ADMIN_PASSWORD` (`src/app/api/admin/route.ts` a dál v
+`api/products`, `api/upload`). Neúspěšný pokus **nic nestojí** — dá se hádat
+donekonečna a jakkoli rychle.
+
+**Co udělat:** zpoždění po neúspěšném pokusu, případně dočasné zablokování
+po několika pokusech za sebou. Stačí jednoduché počítadlo podle IP adresy.
+
+Patří do kompletní revize webu.
+
+## 3. Mapa webu čte ze staré `products.json` místo z databáze
 
 **Nalezeno 20. 8. 2026. Dopad: Google nevidí nové zboží.**
 
@@ -33,48 +80,45 @@ Ověřeno, že se to zatím nestalo — v historii gitu soubor není.
 statická vrstva z doby před databází (`src/data/products.json`). Zbytek webu
 přitom čte z PostgreSQL přes `src/lib/supabase-server.ts`.
 
-Důsledek: v mapě webu jsou produkty, které tam byly při posledním ručním
-zápisu do JSON — a chybí všechno, co od té doby přibylo přes administraci.
-
 **Co udělat:**
 
 1. Přepsat `sitemap.ts`, ať bere zboží ze stejného zdroje jako zbytek webu
    (`getProducts` z `@/lib/supabase-server`, je `async`).
 2. Ověřit `/sitemap.xml` po sestavení — musí obsahovat produkt přidaný
    přes administraci.
-3. Teprve pak zvážit smazání `src/data/products.json` a `products.ts`;
-   po opravě už na ně nic neukazuje.
+3. Teprve pak zvážit smazání `src/data/products.json` a `products.ts`.
 
 ⚠ Nasazuje se na VPS, ne přes GitHub — viz `GOTCHAS.md`.
 
-## 2. Administrace nemá ochranu proti hádání hesla
-
-**Otevřené od 18. 8. 2026.**
-
-Přihlášení do administrace porovná hlavičku `x-admin-key` s
-`process.env.ADMIN_PASSWORD` (`src/app/api/admin/route.ts` a dál v
-`api/products`, `api/upload`). Neúspěšný pokus **nic nestojí** — dá se hádat
-donekonečna a jakkoli rychle.
-
-Heslo je krátké, zvolené záměrně kvůli zapamatovatelnosti. Tím spíš rozhoduje
-ta druhá půlka ochrany.
-
-**Co udělat:** zpoždění po neúspěšném pokusu, případně dočasné zablokování
-po několika pokusech za sebou. Stačí jednoduché počítadlo podle IP adresy.
-
-## 3. Vyměnit heslo do administrace
-
-**Otevřené od 20. 8. 2026.** Heslo leželo v otevřeném textu v poznámkovém
-souboru a při práci s ním se dostalo i do transkriptu na disku. Soubor je
-smazaný, ale to heslo nezneplatní.
-
-Postup je v AIOS: `.claude/skills/hesla-a-klice/`. Pořadí je důležité —
-nasadit nové na VPS, restartovat s `pm2 restart retrokredenc --update-env`,
-ověřit, teprve pak zahodit staré.
-
 ## 4. Uklidit zbytky po přechodu ze Supabase
 
-**Nespěchá, ale plete to.** `src/lib/supabase-server.ts` se Supabase nemluví,
-balíčky `@supabase/*` v `package.json` nic nepohánějí a
-`.github/workflows/deploy.yml` nasazuje na GitHub Pages, kde web nežije.
-Podrobně v `GOTCHAS.md`.
+`src/lib/supabase-server.ts` se Supabase nemluví, balíčky `@supabase/*`
+v `package.json` nic nepohánějí a `.github/workflows/deploy.yml` nasazuje na
+GitHub Pages, kde web nežije. Podrobně v `GOTCHAS.md`.
+
+## 5. Záloha na NAS neprochází
+
+**Zjištěno 21. 8. 2026.** Zálohy webu mají fungovat ve dvou vrstvách — na VPS
+a na Macu, odkud se kopírují na NAS. **Ta druhá kopie neprošla už třikrát:**
+
+```
+2026-08-18  CHYBA: kopie na NAS selhala
+2026-08-19  NAS neni pripojen, preskoceno
+2026-08-20  CHYBA: kopie na NAS selhala
+            /Volumes/Soubory/Projekty/Retrokredenc/zalohy/: Operation not permitted
+```
+
+Zálohy tedy existují **jen na Macu a na VPS** — a ty na VPS leží na tomtéž
+serveru, který zálohují.
+
+Dvě různé příčiny: buď NAS **není připojený** (a skript to jen tiše přeskočí),
+nebo připojený je, ale zápis do `Projekty/Retrokredenc/zalohy/` **nemá
+oprávnění**. Druhé bývá u úloh spouštěných na pozadí tím, že jim macOS
+nedovolí sáhnout na síťový svazek.
+
+**Co udělat:** ověřit, že ta složka na NAS vůbec existuje a jde do ní ručně
+zapsat; pak zjistit, jestli úloha na pozadí potřebuje povolit přístup k disku.
+A hlavně — **skript by měl selhání hlásit hlasitěji než řádkou v logu**,
+protože takhle to tři dny nikdo nevěděl.
+
+Skript: `~/Data/_zalohy/stahni-zalohy.sh`, log `~/Data/_zalohy/stahovani.log`.
