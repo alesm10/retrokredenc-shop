@@ -96,29 +96,29 @@ přitom čte z PostgreSQL přes `src/lib/supabase-server.ts`.
 v `package.json` nic nepohánějí a `.github/workflows/deploy.yml` nasazuje na
 GitHub Pages, kde web nežije. Podrobně v `GOTCHAS.md`.
 
-## 5. Záloha na NAS neprochází
+## 5. Záloha na NAS — třetí kopie obnovena, automatika ještě ne
 
-**Zjištěno 21. 8. 2026.** Zálohy webu mají fungovat ve dvou vrstvách — na VPS
-a na Macu, odkud se kopírují na NAS. **Ta druhá kopie neprošla už třikrát:**
+**Zjištěno 21. 8. 2026, částečně vyřešeno.** Kopie záloh na NAS tři dny
+(18.–20. 8.) neprošla a nikdo o tom nevěděl — chyba skončila řádkou v logu.
 
-```
-2026-08-18  CHYBA: kopie na NAS selhala
-2026-08-19  NAS neni pripojen, preskoceno
-2026-08-20  CHYBA: kopie na NAS selhala
-            /Volumes/Soubory/Projekty/Retrokredenc/zalohy/: Operation not permitted
-```
+**Příčina nebyla na NASu.** `Operation not permitted` vydává macOS: programy
+nesmí na síťové svazky bez **Plného přístupu k disku**. Finder ho má,
+spouštěná úloha ne. Poznávací znamení: nejdou ani ostatní síťové svazky,
+zatímco místní disk funguje.
 
-Zálohy tedy existují **jen na Macu a na VPS** — a ty na VPS leží na tomtéž
-serveru, který zálohují.
+**Hotovo:** zálohy z 18.–21. 8. včetně dnešní ručně zkopírovány na NAS
+a ověřeny kontrolními součty. Skript `~/Data/_zalohy/stahni-zalohy.sh`
+přepsán — sám se připojí, pozná mrtvé připojení, respektuje provozní dobu
+NASu (9:00–22:00) a **selhání hlásí systémovým upozorněním**, ne jen do logu.
 
-Dvě různé příčiny: buď NAS **není připojený** (a skript to jen tiše přeskočí),
-nebo připojený je, ale zápis do `Projekty/Retrokredenc/zalohy/` **nemá
-oprávnění**. Druhé bývá u úloh spouštěných na pozadí tím, že jim macOS
-nedovolí sáhnout na síťový svazek.
+**Zbývá rozhodnout, jak dál s automatikou ve 20:00:**
 
-**Co udělat:** ověřit, že ta složka na NAS vůbec existuje a jde do ní ručně
-zapsat; pak zjistit, jestli úloha na pozadí potřebuje povolit přístup k disku.
-A hlavně — **skript by měl selhání hlásit hlasitěji než řádkou v logu**,
-protože takhle to tři dny nikdo nevěděl.
+1. **Rychlá cesta:** přidat `/bin/bash` do Plného přístupu k disku. Funguje
+   hned, ale dává plný přístup k disku všemu, co se přes bash spustí.
+2. ⭐ **Lepší cesta: vyřadit Mac z řetězu.** Teď to jde VPS → Mac → NAS
+   a prostřední článek je zapnutý jen občas. **Synology si zálohy umí stáhnout
+   z VPS sám** naplánovanou úlohou a je zapnutý 9:00–22:00. Mac by z rovnice
+   vypadl i s celou touhle třídou problémů. Půl hodiny práce v DSM.
 
-Skript: `~/Data/_zalohy/stahni-zalohy.sh`, log `~/Data/_zalohy/stahovani.log`.
+Do rozhodnutí platí: **záloha na NAS se musí hlídat ručně** — `tail -5
+~/Data/_zalohy/stahovani.log`.
