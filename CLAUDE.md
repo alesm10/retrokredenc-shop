@@ -7,6 +7,27 @@
 > **Autor je Aleš Miclík — vyučený soustružník, ne programátor.** Odborný pojem
 > vysvětli hned při prvním použití jednou větou.
 
+## Co o tomhle projektu **není** tady (a proč)
+
+Poznámky se nesmí zdvojovat — jedna strana drží obsah, druhá jen šipku.
+Dělící čára vede po tom, **co by se dalo zveřejnit**, protože tenhle
+repozitář je **veřejný**:
+
+| Patří **sem** (repozitář webu) | Patří do **AIOS** (`~/Data/AIOS`, soukromé) |
+|---|---|
+| kód, `UKOLY.md`, `GOTCHAS.md` | IP serveru, SSH přístupy, kde leží klíče |
+| jak web funguje, co je rozbité | jak se web zálohuje (úloha na NASu, VPS) |
+| rozhodnutí o webu a jejich důvody | co ještě na tom VPS běží |
+
+Konkrétně v AIOS zůstává `infrastruktura/VYSTUPY/nas-stahuje-zalohy-z-vps.md`
+(postup záloh) a karty `karta-co-bezi-a-kde.md`, `karta-kde-lezi-klice.md`,
+`karta-zabezpeceni-vps.md`.
+
+**Když při práci narazíš na poznámku o webu ležící v AIOS:** přesuň ji sem,
+pokud je zveřejnitelná — a na původní místo dej jednu větu s odkazem, ať se
+neztratí stopa. Když zveřejnitelná není, zůstává v AIOS a sem patří nanejvýš
+zmínka, že existuje.
+
 ## ⚠ Živý web běží na VPS a nasazuje se přímo tam
 
 Tenhle projekt má **tři místa, ne dvě**:
