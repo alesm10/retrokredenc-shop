@@ -11,10 +11,15 @@
  * byl kód na Macu o šest commitů pozadu a nikdo o tom nevěděl, protože
  * změny se dělaly rovnou na serveru.
  *
- *   start : stáhne z GitHubu a připomene, ať se ověří stav serveru
- *   end   : upozorní na nezapsanou práci; NIC sám necommituje
+ *   start : stáhne z GitHubu, odešle čekající commity, připomene stav serveru
+ *   end   : odešle hotové commity; rozdělanou práci NIKDY necommituje
  *
- * U kódu je commit rozhodnutí, ne vedlejší efekt zavření okna.
+ * U kódu je commit rozhodnutí, ne vedlejší efekt zavření okna. Push commitu,
+ * který už je odsouhlasený, ale rozhodnutí není — je to jen doprava, a bez
+ * něj commit na druhém počítači neexistuje. (Odesílání doplněno 25. 8. 2026.)
+ *
+ * ⚠ Push na GitHub tady NIC NENASAZUJE — živý web se mění až na VPS.
+ * Odesílá se tedy jen záloha historie, ne obsah webu.
  */
 import { execFileSync } from "node:child_process"
 
@@ -32,6 +37,28 @@ const radku = (t) => (t.trim() ? t.trim().split("\n").length : 0)
 const sklonuj = (n, jedna, dve, pet) => `${n} ${n === 1 ? jedna : n >= 2 && n <= 4 ? dve : pet}`
 const zmeny = (n) => sklonuj(n, "nezapsaná změna", "nezapsané změny", "nezapsaných změn")
 const commity = (n) => sklonuj(n, "commit čeká", "commity čekají", "commitů čeká")
+const commitu = (n) => sklonuj(n, "commit", "commity", "commitů")
+
+/**
+ * Odešle commity, které už existují. NIC necommituje — když push selže,
+ * jen to řekne. Rebase kódu naslepo by mohl nadělat víc škody než užitku.
+ */
+function odesli() {
+  let neodeslano
+  try {
+    neodeslano = radku(git("log", "@{u}..HEAD", "--oneline"))
+  } catch {
+    return                                // větev bez protějšku na serveru
+  }
+  if (!neodeslano) return
+  try {
+    git("push")
+    rekni(`odesláno na GitHub: ${commitu(neodeslano)} (⚠ to není nasazení — web se mění na VPS)`)
+  } catch (e) {
+    rekni(`!!! push SELHAL — ${commity(neodeslano)}, odešli ručně: git push`)
+    rekni(String(e.stderr || e.message).trim().split("\n").slice(0, 2).join(" | "))
+  }
+}
 
 try {
   git("rev-parse", "--git-dir")
@@ -53,19 +80,13 @@ if (MODE === "start") {
   rekni("⚠ živý web běží na VPS a nasazuje se přímo tam — GitHub nemusí být aktuální")
   rekni(`   ověř takhle:  ssh ${VPS} "cd ${SLOZKA_NA_VPS} && git log -3 --oneline"`)
 
+  odesli()
   if (rozdelano) rekni(`pozor: ${zmeny(rozdelano)} z minula`)
-} else if (rozdelano) {
-  rekni(`${zmeny(rozdelano)} — commitni a pushni, jinak nikde nebudou`)
 } else {
-  try {
-    const neodeslano = radku(git("log", "@{u}..HEAD", "--oneline"))
-    if (neodeslano) {
-      rekni(`${commity(neodeslano)} na odeslání — spusť: git push`)
-      rekni("   a nezapomeň: push na GitHub NENÍ nasazení, web se mění až na VPS")
-    }
-  } catch {
-    /* větev bez protějšku na serveru — nevadí */
+  if (rozdelano) {
+    rekni(`${zmeny(rozdelano)} — druhý počítač uvidí až to, co commitneš`)
   }
+  odesli()
 }
 
 // Hook nikdy nesmí shodit sezení.

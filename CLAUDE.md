@@ -102,9 +102,11 @@ Před dokončením musí projít `npm run build`.
 
 ## Git
 
-Hook `.claude/hooks/sync-web.mjs` při startu stáhne z GitHubu a připomene stav
-serveru, na konci jen **upozorní** na nezapsanou práci. **Necommituj sám** —
-u kódu je commit rozhodnutí. Zprávy commitů česky, jedna věta v čem je změna.
+Hook `.claude/hooks/sync-web.mjs` při startu stáhne z GitHubu, připomene stav
+serveru a při startu i na konci **sám odešle commity, které čekají**. Na
+nezapsanou práci jen upozorní. **Necommituj sám** — u kódu je commit
+rozhodnutí. ⚠ To odeslání je jen záloha historie na GitHub — **web se tím
+nemění**, ten se nasazuje na VPS (doplněno 25. 8. 2026). Zprávy commitů česky, jedna věta v čem je změna.
 Na konci: `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`
 
 Do repozitáře **nepatří** obsah AIOS (smlouvy, osobní údaje). Když potřebuješ
