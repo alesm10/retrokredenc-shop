@@ -53,8 +53,10 @@ neproveď mimochodem jako součást jiné práce.
 
 ## Tajemství — do chatu ani do commitu nepatří
 
-V `.env.local` (v `.gitignore`, v historii gitu **není** — ověřeno 20. 8. 2026):
-`ADMIN_PASSWORD`, `GMAIL_APP_PASSWORD`, `DB_PASSWORD`, staré Supabase klíče.
+V `.env.local` **na serveru** (v `.gitignore`, v historii gitu **není** — ověřeno
+20. 8. 2026): `ADMIN_PASSWORD`, `GMAIL_APP_PASSWORD`, `DB_PASSWORD` a další —
+názvy v `env.example`. Na Macu `.env.local` není (starý z května smazán 18. 9. 2026);
+pro zkoušku administrace se heslo předává při spuštění (`GOTCHAS.md`).
 
 - **Hodnotu hesla nikdy nevypisuj** — ani do odpovědi, ani do zprávy commitu.
   Co se napíše do chatu, zůstane v čitelném transkriptu na disku.

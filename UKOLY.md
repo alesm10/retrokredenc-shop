@@ -46,8 +46,6 @@ berou web bez košíku (nákup je přes kontaktní formulář).
   dokud se neodhlásí. Vědomě ponecháno — Verča se nemusí přihlašovat pořád.
 - Mapa webu se obnovuje jednou za hodinu — nový produkt se v ní objeví se
   zpožděním.
-- `.env.local` na Macu je z 13. 5. 2026 a má staré hodnoty. Pro práci nevadí
-  (na Macu se web plně nesestaví, viz `GOTCHAS.md`).
 
 ---
 
