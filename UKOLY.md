@@ -32,8 +32,13 @@ K zvážení: retro porcelán se prodává hlavně ve facebookových skupinách,
 Vintedu a Aukru. Web pak může být katalog a automat rozesílá tam, kde jsou
 kupci.
 
-Předtím levný krok: přihlásit web do **Google Search Console** a odeslat mapu
-webu. Jestli už přihlášený je, nikdo neověřoval.
+✅ **Google Search Console** zapojená 18. 9. 2026 — mapa webu odeslaná, Google
+načetl 9 stránek. Za pár dní ukáže, co lidé hledají (`GOTCHAS.md`).
+
+Počet produktů (Aleš 18. 9.: propagace „až bude víc produktů"): nabídka kus po
+kuse (FB skupiny, Vinted, Aukro) jde hned; vedení lidí na celý web dává smysl
+od zhruba 20–30 kusů a pravidelného přísunu. Ověřit, jestli Zboží.cz a Heureka
+berou web bez košíku (nákup je přes kontaktní formulář).
 
 ### 9. Drobnosti, na které se narazilo — neurgentní
 

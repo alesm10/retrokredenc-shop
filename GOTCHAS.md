@@ -113,6 +113,17 @@ Website v popisu repozitáře vede na `https://retrokredenc.cz`. Prostředí
 `github-pages` a `Production` smazána; 85 starých záznamů o nasazení zůstalo
 (bez přihlášení k API nejdou smazat, nic nedělají).
 
+## Google Search Console (od 18. 9. 2026)
+
+- Ověřená **celá doména** `retrokredenc.cz` (i `www`) záznamem **TXT
+  `google-site-verification=…` v DNS u Wedosu**. ⚠ **Ten záznam nemazat** —
+  Google by ověření zrušil. Ostatní záznamy: `@`, `www`, `n8n` → VPS.
+- Wedos zveřejnil nový záznam asi za 5 minut (sami píší až 60).
+- Mapa webu odeslaná jako celá adresa `https://retrokredenc.cz/sitemap.xml` —
+  u ověření celé domény samotné `sitemap.xml` Search Console odmítne.
+  Při odeslání: **Úspěšné, 9 stránek** (4 stránky webu + 5 produktů).
+- Účet: Alešův Google účet (který, je v AIOS).
+
 ## Zálohy
 
 - Databáze i fotky se zálohují: na VPS `~/zaloha-db.sh` v cronu ve 3:00
