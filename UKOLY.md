@@ -59,6 +59,9 @@ v `public/products/` a `public/images/KAM_VLOZIT_KREDENC.md` (ležel veřejně n
 webu). `README.md` a `env.example` přepsány podle skutečnosti. V historii gitu
 všechno zůstává.
 
+Na serveru smazáno 6 zkušebních souborů z 11. 6. (na žádný neukazoval produkt,
+ověřeno v databázi) a prázdná `public/products/`. Fotky zboží jsou jen v `uploads/`.
+
 ### 7. ✅ Fotky z opravdového telefonu — 18. 9. 2026
 
 První skutečný produkt („Broušená váza", 20:12) přidaný z telefonu s Androidem:
