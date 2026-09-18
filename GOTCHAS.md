@@ -16,6 +16,29 @@
 - Repozitář se jmenuje **`alesm10/retrokredenc-shop`** a je **veřejný** —
   `retrokredenc` neexistuje. Cokoli, co se sem commitne, uvidí kdokoli.
 
+## Na Macu se web celý nesestaví — a nevadí to
+
+`npm run build` na Macu **projde kompilací a kontrolou typů, pak spadne** na
+`ECONNREFUSED 5432`: titulní stránka, katalog a mapa webu si při sestavení
+berou zboží z databáze a ta je jen na VPS. Platí to i pro nezměněný kód.
+
+**Co to znamená pro ověřování:** na Macu stačí `✓ Compiled successfully`
+a `Finished TypeScript`. Celé sestavení a zkouška se dělají **na serveru**.
+
+## Nasazení — jak se to dělá bez rizika (ověřeno 18. 9. 2026)
+
+1. Na serveru sestavit a spustit zkušební kopii **vedle** živého webu:
+   kód do `~/retrokredenc-zkouska` (rsync bez `node_modules`, `.next`, `.git`),
+   zkopírovat `.env.local`, `npm ci && npm run build`,
+   `ADMIN_PASSWORD=zkouska npx next start -p 3001`. Port 3001 je zvenku zavřený;
+   z Macu na něj tunelem `ssh -L 3101:localhost:3001 …`.
+   Zkušební heslo přebije to z `.env.local` — skutečné heslo se nikam nezadává.
+2. ⚠ **Databáze je jedna, sdílená se živým webem.** Zkušební produkt zakládat
+   **bez „Dostupné k prodeji"** (v katalogu se neukáže) a hned smazat.
+3. Živý web: `git fetch && git merge --ff-only origin/main`, `npm ci`,
+   `npm run build`, a **jen když build projde** `pm2 restart retrokredenc --update-env`.
+4. Ověřit zvenku (`curl https://retrokredenc.cz/…`) a zkušební složku smazat.
+
 ## Restart po změně nastavení
 
 ```bash
@@ -25,18 +48,49 @@ pm2 restart retrokredenc --update-env
 ⚠ **Bez `--update-env` se nové proměnné z `.env.local` nenačtou** a bude to
 vypadat, že oprava nezabrala.
 
-## Mrtvé zbytky, na které se nedá spolehnout
+## nginx — dva řádky, na kterých web stojí
 
-- `.github/workflows/deploy.yml` (GitHub Pages) a statický export ve složce
-  `retrokredenc/` jsou zbytky z doby, kdy web běžel na Vercelu. Živý web je
-  běžící Next.js server, ne statika.
-- **Web už neběží na Supabase**, ale na lokálním PostgreSQL na VPS
-  (commit `21497d5`). Přesto se `src/lib/supabase-server.ts` pořád tak jmenuje
-  a balíčky Supabase zůstaly v `package.json`.
-- `src/data/products.json` je vrstva z doby před databází. ⚠ `src/app/sitemap.ts`
-  z ní **pořád čte**, takže mapa webu neodpovídá skutečnému zboží.
-- `.env.local` na Macu je z 13. 5. 2026 a nese ještě klíče Supabase.
-  **Živá pravda o konfiguraci je na serveru.**
+V `/etc/nginx/sites-available/retrokredenc` (doplněno 18. 9. 2026, záloha
+původního vedle s příponou `.zaloha-2026-09-18`):
+
+- `client_max_body_size 20M;` — výchozí limit nginx je **1 MB**. Bez tohoto
+  řádku padala každá fotka z telefonu s chybou 413 a administrace řekla jen
+  „Chyba při nahrávání fotky". Teď fotku zmenšuje už telefon, řádek je pojistka.
+- `proxy_set_header X-Real-IP $remote_addr;` — ⚠ **na tom stojí ochrana proti
+  hádání hesla** (`src/lib/overeni.ts`). Bez něj web nezná adresu návštěvníka:
+  útočník si ji v hlavičce podvrhne a obejde počítadlo, nebo se všichni
+  počítají jako jeden a pět špatných pokusů kohokoli zamkne administraci
+  všem. Kdo nginx přenastavuje, musí ten řádek zachovat.
+
+Úprava nginx potřebuje `sudo` — heslo je v RoboFormu, ne tady.
+
+## Ochrana proti hádání hesla — jak se chová
+
+- 5 špatných pokusů z jedné adresy → **15 minut zamčeno**, i správné heslo
+  vrátí 429 („Příliš mnoho pokusů").
+- ⚠ Domácnost má jednu veřejnou adresu — **zamkne se celý dům**, ne jeden telefon.
+  Kdo zkouší ochranu, zablokuje na čtvrt hodiny i Verču.
+- Počítadlo žije v paměti; `pm2 restart` zámek hned zruší.
+
+## Next.js 16 — co se změnilo proti 14 (přechod 18. 9. 2026)
+
+- **Parametry z adresy jsou `Promise`:** `{ params }: { params: Promise<{ id: string }> }`
+  a číst `(await params).id`. Týká se stránky produktu a API `products/[id]`,
+  `files/[filename]`.
+- Sestavuje Turbopack; `next lint` už neexistuje (skript `lint` v `package.json`
+  nefunguje, ESLint v projektu ani nebyl).
+- Next při prvním buildu sám přepsal `tsconfig.json` (`jsx: react-jsx`) — patří
+  to do commitu.
+- Záloha celé složky se starou verzí 14 leží na VPS v `~/retrokredenc-shop-v14`
+  — smazat, až nová verze týden drží (po 25. 9. 2026).
+
+## GitHub Pages a Vercel — staré kopie webu
+
+Do 18. 9. 2026 visela na `alesm10.github.io/retrokredenc-shop` **veřejně stará
+kopie e-shopu** — GitHub Pages sestavoval z kořene repozitáře, kde ležel
+statický export. Soubory smazány, Pages v nastavení vypnuté (Source → None).
+Na `retrokredenc-shop.vercel.app` nic neběží (404), zbyl jen odkaz v popisu
+repozitáře.
 
 ## Zálohy
 
@@ -58,7 +112,10 @@ vypadat, že oprava nezabrala.
   správně (`process.env.ADMIN_PASSWORD`), prozradil to popis.
   V **veřejném** repozitáři. Historie je trvalá.
 - Náprava takového úniku **není přepis historie, ale změna hesla.** Jakmile
-  neplatí, je zápis neškodný.
-- ⚠ **Otevřený úkol:** administrace nemá žádnou ochranu proti opakovanému
-  hádání hesla — chybí zpoždění po neúspěšném pokusu. U krátkého hesla je to
-  ta část, která rozhoduje.
+  neplatí, je zápis neškodný. Heslo vyměněno 21. 8. 2026.
+- **Dvě různá hesla, snadno se pletou:** heslo do administrace (jen v
+  `.env.local` na serveru) a aplikační heslo Googlu „Retro Kredenc web"
+  (Verčin účet, odesílá zprávy z formuláře). Když se změní heslo ke Google
+  účtu, **Google aplikační hesla zruší** a formulář přestane odesílat.
+- Jestli heslo na serveru je to staré, se dá zjistit **porovnáním otisků**
+  (`sha256sum` hodnoty na serveru proti hodnotě na Macu) — bez vypsání hesla.

@@ -2,7 +2,7 @@
 
 > Web **retrokredenc.cz** — prodej autentického porcelánu z let 1950–1989.
 > Soukromý rodinný projekt (v AIOS patří pod `soukromi/`), ne pracovní.
-> Next.js 14 + PostgreSQL, jednoduchý admin pro přidávání zboží.
+> Next.js 16 + React 19 + PostgreSQL, jednoduchý admin pro zboží (používá se z mobilu).
 >
 > **Autor je Aleš Miclík — vyučený soustružník, ne programátor.** Odborný pojem
 > vysvětli hned při prvním použití jednou větou.
@@ -69,7 +69,8 @@ V `.env.local` (v `.gitignore`, v historii gitu **není** — ověřeno 20. 8. 2
 |---|---|
 | Stránky webu | `src/app/` (Next.js App Router) |
 | API pro produkty, upload, admin | `src/app/api/` |
-| Přístup k databázi | `src/lib/db.ts`, `src/lib/supabase-server.ts` |
+| Přístup k databázi | `src/lib/db.ts`, `src/lib/produkty.ts` |
+| Ověření hesla do administrace | `src/lib/overeni.ts` (ochrana proti hádání) |
 | Komponenty a vzhled | `src/components/`, `src/styles/`, Tailwind |
 | Fotky produktů | `public/products/` (na VPS je ostrá sada) |
 
@@ -77,12 +78,11 @@ Návody psané pro člověka, ne pro Clauda, jsou ve složce `navody/`.
 
 ## Nástrahy, které tenhle repozitář má
 
-Projekt prošel migrací ze Supabase na vlastní PostgreSQL a **zbytky po ní jsou
-pořád vidět** — soubor, který se jmenuje `supabase-server.ts` a mluví
-s PostgreSQL; mrtvá vrstva `products.json`, ze které ale pořád čte `sitemap.ts`;
-nasazovací workflow na GitHub Pages, kde web nežije; statický export ve složce
-`retrokredenc/`. Všechno i s dopadem je v **`GOTCHAS.md`** — než se na cokoli
-z toho spolehneš, přečti to.
+Zbytky po Supabase a GitHub Pages jsou od 18. 9. 2026 pryč. Zůstalo, co se
+nepozná z kódu: **na Macu se web celý nesestaví** (chybí databáze), ochrana
+proti hádání hesla **stojí na jednom řádku v nginx**, nasazuje se přes
+zkušební kopii vedle živého webu. Všechno je v **`GOTCHAS.md`** — přečti to,
+než začneš.
 
 Mrtvý kód **zmiň, nemaž.** Úklid je samostatné rozhodnutí, ne vedlejší efekt
 jiné práce.
@@ -98,7 +98,8 @@ jiné práce.
 5. **Než něco ustřelíš, zeptej se; když je to jisté, udělej to.** U databáze
    a u nasazení platí to první vždycky.
 
-Před dokončením musí projít `npm run build`.
+Před dokončením musí projít `npm run build` — na Macu jen kompilace a typy,
+celé sestavení na serveru (`GOTCHAS.md`).
 
 ## Git
 
@@ -109,5 +110,7 @@ rozhodnutí. ⚠ To odeslání je jen záloha historie na GitHub — **web se t�
 nemění**, ten se nasazuje na VPS (doplněno 25. 8. 2026). Zprávy commitů česky, jedna věta v čem je změna.
 Na konci: `Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>`
 
-Do repozitáře **nepatří** obsah AIOS (smlouvy, osobní údaje). Když potřebuješ
-AIOS jako kontext, spusť sezení s `claude --add-dir ~/Data/AIOS`.
+Do repozitáře **nepatří** obsah AIOS (smlouvy, osobní údaje). Na webu se
+pracuje **z okna AIOS** (Alešovo rozhodnutí 12. 9. 2026) — odtud je vidět AIOS
+i tenhle repozitář. Neraď `--add-dir` ani otevírání jiného okna.
+⚠ Z okna AIOS **neběží hook `sync-web.mjs`** — stáhnout a odeslat ručně.

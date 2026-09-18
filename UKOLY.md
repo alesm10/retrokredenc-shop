@@ -6,151 +6,124 @@
 > **Tenhle seznam je jediné místo, kde tyhle úkoly žijí.** V AIOS se
 > nepřipomínají — patří k webu, ne do druhého mozku.
 
-## Jak se na ten web zatím dívat (rozhodnuto 21. 8. 2026)
+## Jak se na ten web dívat (rozhodnuto 18. 9. 2026)
 
-Web je veřejně dostupný, ale **Verča ho zatím nepoužívá** a žádný skutečný
-provoz na něm neběží. Kdyby se někdo dostal do administrace, škoda by byla
-malá — nejsou tam objednávky ani platby, jen zboží a fotky, které existují
-i jinde.
+**Web bude žít.** Verča na něj postupně vkládá zboží — na mobilu nafotí,
+v administraci napíše popisky a vloží fotky. Aleš web udržuje sám s pomocí
+Clauda; pronajatý e-shop (Shoptet a pod.) byl zvážen a odmítnut.
 
-Z toho plyne priorita: **body 0 a 1 vyřešit, protože se týkají klíčů, které
-platí i mimo tenhle web.** Zbytek počká na **kompletní revizi webu**, kterou
-Aleš plánuje, až bude čas. Do té doby se web nepředělává po kouskách.
+Z toho plyne: administrace se musí dát pohodlně používat **z telefonu**
+a údržba (aktualizace Next.js) se dělá průběžně, ne jednou za rok.
 
----
-
-## 0. ✅ Tajný klíč Supabase — vyřešeno 21. 8. 2026
-
-Ve `scripts/migrate-products.mjs` ležel klíč k Supabase v otevřeném textu.
-Skript nikdy nebyl v gitu, ale repozitář je veřejný a `.gitignore` ho nekryl.
-
-**Ukázalo se, že klíč už nic neodemyká.** Projekt v Supabase neexistuje —
-jeho adresa se nedá ani přeložit (`NXDOMAIN`), a Aleš potvrdil z účtu, že
-v organizaci `alesm10's Org` **není ani jeden projekt** a spotřeba je nulová.
-Rotovat tedy nebylo co.
-
-**Hotovo:** skript smazán. Ověřeno, že v repozitáři nezůstal žádný zapsaný
-klíč — `src/lib/supabase.ts` obsahuje jen názvy proměnných (`process.env`),
-ne hodnoty. Živý web na VPS nemá v konfiguraci ani jednu proměnnou Supabase.
-
-Poučení: **mrtvý klíč vypadá pro nálezce stejně jako živý.** Odklidit se má
-tak jako tak.
-
-## 1. ⚠ Vyměnit heslo do administrace — přednostní
-
-**Otevřené od 20. 8. 2026.** Heslo leželo v otevřeném textu v poznámkovém
-souboru (`gotchas.md` ve složce `Cursor vibecoding`) a při práci s ním se
-dostalo i do transkriptu Claude Code na disku. Soubor je smazaný, ale to
-heslo nezneplatní.
-
-Je tady i druhý důvod, proč to nenechat ležet: **stejné nebo podobné heslo
-se snadno používá i jinde.** Únik z bezvýznamného webu pak přestane být
-bezvýznamný.
-
-Postup je v AIOS: `.claude/skills/hesla-a-klice/`. Pořadí je důležité —
-nasadit nové na VPS, restartovat `pm2 restart retrokredenc --update-env`,
-ověřit, teprve pak zahodit staré.
+Do 18. 9. platilo rozhodnutí z 21. 8. — web se nepoužívá, předělá se najednou
+při kompletní revizi. Ta revize proběhla 18. 9. (bod 6).
 
 ---
 
-## 1b. ✅ WEDOS Global Protection — rozhodnuto 21. 8. 2026: NEPLATIT
+## Otevřené
 
-**Došlo 21. 8. 2026.** WEDOS oznámil, že neuhrazenou službu *Global Protection*
-pro `retrokredenc.cz` od 15. 9. postupně vypne a 25. 9. zruší úplně.
+### 7. První produkt z opravdového telefonu
 
-**Doporučení: neplatit.** Ověřeno zvenčí, že ta ochrana **není v cestě provozu**:
+Zmenšování fotek je vyzkoušené jen v prohlížeči na Macu, který se tváří jako
+mobil. **Až Verča přidá první produkt, ověřit, že fotky prošly** a že se na
+stránce produktu zobrazují. Kdyby ne — chybová hláška v administraci teď
+říká, která fotka neprošla a proč.
 
-| Kontrola | Zjištění |
+### 8. Propagace webu — nápad, zatím se nestaví
+
+Automatizovat se to dá (na VPS už běží n8n): nové zboží samo na Facebook
+a Instagram, soubor s nabídkou (feed) pro Zboží.cz a Heureku, bezplatné
+výpisy v Google Shopping. **Smysl to má, až bude zboží.**
+
+K zvážení: retro porcelán se prodává hlavně ve facebookových skupinách, na
+Vintedu a Aukru. Web pak může být katalog a automat rozesílá tam, kde jsou
+kupci.
+
+Předtím levný krok: přihlásit web do **Google Search Console** a odeslat mapu
+webu. Jestli už přihlášený je, nikdo neověřoval.
+
+### 9. Drobnosti, na které se narazilo — neurgentní
+
+- U uloženého produktu jdou fotky jen **přidávat**, ne mazat ani přeřadit.
+- Heslo do administrace si telefon pamatuje v prohlížeči (`localStorage`),
+  dokud se neodhlásí. Vědomě ponecháno — Verča se nemusí přihlašovat pořád.
+- Mapa webu se obnovuje jednou za hodinu — nový produkt se v ní objeví se
+  zpožděním.
+- `public/products/` obsahuje fotky tří původních ukázkových produktů, které
+  už web nepoužívá.
+- Složka `navody/` a `README.md` popisují staré stavy (Vercel, NAS,
+  `products.json`). Nejsou pravda — pravda je v `CLAUDE.md` a `GOTCHAS.md`.
+- V popisu repozitáře na GitHubu (About) visí odkaz na `retrokredenc-shop.vercel.app`,
+  kde nic neběží.
+- `.env.local` na Macu je z 13. 5. 2026 a má staré hodnoty. Pro práci nevadí
+  (na Macu se web plně nesestaví, viz `GOTCHAS.md`).
+
+---
+
+## Hotové
+
+### 6. ✅ Revize webu — 18. 9. 2026
+
+Audit celého kódu a opravy nasazené na VPS týž den. Každá část vyzkoušená na
+serveru ve zkušební kopii vedle živého webu, pak nasazená a ověřená zvenku.
+
+| Co | Jak |
 |---|---|
-| `retrokredenc.cz` ukazuje na | `152.239.117.152` — vlastní VPS |
-| Certifikát | Let's Encrypt vydaný přímo pro doménu (proxy by měla svůj) |
-| Hlavička odpovědi | `nginx/1.24.0 (Ubuntu)`, žádná stopa po proxy |
-| Přístup přímo na IP serveru | funguje |
+| **Fotky z mobilu padaly** | nginx pouštěl jen 1 MB, fotka z telefonu má 3–5 MB. Admin teď fotku **zmenší v telefonu** na 1600 px (≈ 150 kB) a nginx má limit 20 MB jako pojistku. |
+| **Next.js 14 → 16**, React 19 | kritické díry v Next.js; `npm audit` hlásí 0 |
+| nodemailer 10, sharp 0.35.4 | známé díry |
+| **Úprava zboží, „Označit jako prodané"** | dřív šlo zboží jen přidat a smazat |
+| Ochrana proti hádání hesla | bod 2 |
+| Mapa webu z databáze, neznámé ID → 404 | bod 3 |
+| Úklid po Supabase a GitHub Pages | bod 4 |
+| Kanonická adresa | každá stránka tvrdila Googlu, že je kopií titulní — produkty by se nezařadily |
+| Náhled pro sdílení | adresy fotek jsou úplné (`metadataBase`) |
+| Nahrávání | jen obrázky, max. 15 MB, bezpečný název souboru |
+| Úprava produktu přes API | jen povolené sloupce |
+| Smazání produktu | smaže i jeho nahrané fotky z disku |
+| Kontaktní formulář | past na roboty (skryté pole), chyba neshodí server |
+| Administrace | políčko s fotkami se po uložení vyčistí; seznam čitelný na mobilu; staré uložené heslo se samo zahodí |
 
-Kdyby web přes WGP tekl, ukazovala by doména na jejich adresy. Věta v mailu
-o nedostupnosti webu i pokyn „přesměrujte DNS na vlastní server" míří na
-zákazníky, kteří ochranu skutečně používají.
+### 1. ✅ Heslo do administrace — vyměněno 21. 8. 2026
 
-✅ **Ověřeno v administraci 21. 8. 2026:** zóna `retrokredenc.cz` je vedená
-v sekci **DNS** (stav aktivní, typ primární) — tedy pod běžnou správou domény,
-**ne pod WEDOS Global**. Vypnutí ochrany se DNS ani webu nedotkne.
+Aleš ho zadal přímo na serveru, přes Clauda neprošlo. **Tady to zůstalo jako
+otevřené až do 18. 9.** — ověřeno porovnáním otisků, že heslo na serveru není
+to, které uniklo.
 
-**Takže: výzvu k platbě neuhradit a nic dalšího neřešit.** Služba se 25. 9.
-vypne a nic se nestane.
+### 2. ✅ Ochrana proti hádání hesla — 18. 9. 2026
 
-**Kdyby ochrana někdy byla potřeba:** Cloudflare umí totéž zdarma. Teď není
-co chránit — žádné platby, žádné objednávky, web se nepoužívá.
+Po 5 špatných pokusech z jedné adresy je administrace pro tu adresu na
+15 minut zamčená, každý špatný pokus navíc trvá sekundu. Podrobnosti
+a podmínka, na které to stojí, v `GOTCHAS.md`.
 
-## 2. Administrace nemá ochranu proti hádání hesla
+### 3. ✅ Mapa webu a neexistující produkty — 18. 9. 2026
 
-**Otevřené od 18. 8. 2026.** Přihlášení porovná hlavičku `x-admin-key` s
-`process.env.ADMIN_PASSWORD` (`src/app/api/admin/route.ts` a dál v
-`api/products`, `api/upload`). Neúspěšný pokus **nic nestojí** — dá se hádat
-donekonečna a jakkoli rychle.
+`sitemap.ts` bere zboží z databáze. Adresa produktu, která není číslo
+(`/produkty/kralovsky1`), vrací 404 místo chyby serveru.
 
-**Co udělat:** zpoždění po neúspěšném pokusu, případně dočasné zablokování
-po několika pokusech za sebou. Stačí jednoduché počítadlo podle IP adresy.
+### 4. ✅ Zbytky po Supabase a GitHub Pages — 18. 9. 2026
 
-Patří do kompletní revize webu.
+Smazáno: `src/lib/supabase.ts`, balíčky `@supabase/*`, `src/data/`,
+`.github/` (workflow pro GitHub Pages), statický export `retrokredenc/`,
+`index.html`. `supabase-server.ts` přejmenován na `src/lib/produkty.ts`.
+GitHub Pages v nastavení repozitáře vypnuté (Aleš, 18. 9.) — **na
+`alesm10.github.io/retrokredenc-shop` visela veřejně stará kopie e-shopu.**
 
-## 3. Mapa webu ukazuje na neexistující stránky — a ty vracejí chybu
+### 0. ✅ Tajný klíč Supabase — 21. 8. 2026
 
-**Nalezeno 20. 8., rozsah upřesněn 21. 8. 2026.**
+Klíč ve `scripts/migrate-products.mjs` už nic neodemykal (projekt v Supabase
+neexistuje). Skript smazán. Poučení: **mrtvý klíč vypadá pro nálezce stejně
+jako živý.**
 
-`src/app/sitemap.ts` čte zboží ze staré statické vrstvy `src/data/products.json`,
-zatímco zbytek webu čte z databáze. A ta dvě místa mají **úplně jiná ID**:
+### 1b. ✅ WEDOS Global Protection — 21. 8. 2026: NEPLATIT
 
-| Kde | Jak vypadá ID |
-|---|---|
-| `products.json` (mrtvá vrstva) | `kralovsky1`, `oranzovykvet1`, `sadagold1` |
-| databáze (skutečnost) | UUID — `7e28bb42-e931-…` |
+Doména ukazuje přímo na VPS, ochrana není v cestě provozu. Výzvu k platbě
+neuhradit; služba se 25. 9. vypne a nic se nestane. Kdyby ochrana někdy byla
+potřeba, Cloudflare umí totéž zdarma.
 
-**Dopad je dvojí a ten druhý je horší:**
+### 5. ✅ Záloha na NAS — 21. 8. 2026
 
-1. Google nevidí zboží přidané přes administraci.
-2. **Sitemap Googlu nabízí tři adresy, které neexistují.** Při jejich procházení
-   se textové ID překládá na číslo, vyjde `NaN`, dotaz do databáze spadne
-   a server vrátí chybu. V logu je **92 výskytů**, poslední 21. 8. Chyba serveru
-   je pro vyhledávač horší signál než chybějící stránka.
-
-**Co udělat:**
-
-1. Přepsat `sitemap.ts`, ať bere zboží ze stejného zdroje jako zbytek webu
-   (`getProducts` z `@/lib/supabase-server`, je `async`).
-2. **Ošetřit `/produkty/[id]` na neznámé ID** — má vrátit „nenalezeno" (404),
-   ne spadnout. Teď si kdokoli vymyslí adresu a vyrobí chybu v logu.
-3. Ověřit `/sitemap.xml` po sestavení — musí obsahovat produkt přidaný přes
-   administraci a žádnou z těch tří starých adres.
-4. Teprve pak zvážit smazání `src/data/products.json` a `products.ts`.
-
-Kontrola, jestli chyby ustaly:
-`ssh alesvps@152.239.117.152 "grep -c NaN ~/.pm2/logs/retrokredenc-error.log"`
-
-⚠ Nasazuje se na VPS, ne přes GitHub — viz `GOTCHAS.md`.
-
-## 4. Uklidit zbytky po přechodu ze Supabase
-
-`src/lib/supabase-server.ts` se Supabase nemluví, balíčky `@supabase/*`
-v `package.json` nic nepohánějí a `.github/workflows/deploy.yml` nasazuje na
-GitHub Pages, kde web nežije. Podrobně v `GOTCHAS.md`.
-
-## 5. ✅ Záloha na NAS — vyřešeno 21. 8. 2026
-
-Kopie záloh na NAS tři dny (18.–20. 8.) neprošla a nikdo o tom nevěděl.
-
-**Příčina nebyla na NASu.** `Operation not permitted` na síťovém svazku vydává
-macOS — programy tam nesmí bez Plného přístupu k disku. Finder ho má, úloha na
-pozadí ne.
-
-**Řešení: Mac je z cesty pryč.** NAS si zálohy stahuje z VPS sám (Plánovač úloh
-DSM, denně v 10:00, vlastní SSH klíč). Mac si je stahuje nezávisle ve 20:00.
-Tři kopie, dvě nezávislé cesty — když jedna vypadne, druhá jede dál.
-
-Ověřeno kontrolními součty: všech 13 souborů na NASu sedí s VPS.
-
-**Kontrola, když bude potřeba:**
-- NAS: `Projekty/Retrokredenc/zaloha-z-vps.log`
-- Mac: `tail -5 ~/Data/_zalohy/stahovani.log` — a při selhání navíc vyskočí
-  systémové upozornění
-
-Nastavení celé úlohy: AIOS → `infrastruktura/VYSTUPY/nas-stahuje-zalohy-z-vps.md`.
+NAS si zálohy stahuje z VPS sám (denně v 10:00), Mac nezávisle ve 20:00.
+Kontrola: NAS `Projekty/Retrokredenc/zaloha-z-vps.log`, Mac
+`tail -5 ~/Data/_zalohy/stahovani.log`. Nastavení: AIOS →
+`infrastruktura/VYSTUPY/nas-stahuje-zalohy-z-vps.md`.
