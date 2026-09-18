@@ -134,7 +134,8 @@ Website v popisu repozitáře vede na `https://retrokredenc.cz`. Prostředí
 - U uloženého produktu bez nových fotek vezme stávající fotky.
 - Klíč `ANTHROPIC_API_KEY` je v `.env.local` na serveru. Bez něj tlačítko hlásí
   „AI není nastavená" (503), web jinak funguje.
-- Změřeno: ~15–18 s na návrh (nginx čeká až 60 s). Cena odhadem ~2 Kč/produkt.
+- Změřeno: ~15–18 s na návrh (nginx čeká až 60 s). **Cena skutečně: 3 pokusy
+  za 0,20 $ (Aleš 18. 9.) → ~0,07 $ ≈ 1,5 Kč za návrh.**
 - **Platí se předplaceným kreditem, automatické dobíjení vypnuté** — víc, než je
   kredit, se neutratí. Když dojde, tlačítko hlásí, že AI teď nejde použít;
   dobíjí se ručně v console.anthropic.com → Billing → Buy credits.
