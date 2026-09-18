@@ -14,6 +14,38 @@ type Product = {
   product_images: { url: string; is_primary: boolean }[]
 }
 
+const MAX_STRANA = 1600
+const KVALITA = 0.82
+
+// Fotka z mobilu má 3–5 MB, server pustí jen 1 MB — zmenšíme ji v prohlížeči.
+// Když se zmenšení nepovede, pošle se originál.
+async function zmensiFotku(file: File): Promise<File> {
+  const url = URL.createObjectURL(file)
+  try {
+    const img = document.createElement('img')
+    img.src = url
+    await img.decode()
+    const pomer = Math.min(1, MAX_STRANA / Math.max(img.naturalWidth, img.naturalHeight))
+    if (pomer === 1 && file.size < 1_000_000) return file
+
+    const canvas = document.createElement('canvas')
+    canvas.width = Math.round(img.naturalWidth * pomer)
+    canvas.height = Math.round(img.naturalHeight * pomer)
+    const ctx = canvas.getContext('2d')!
+    ctx.fillStyle = '#fff'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
+
+    const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/jpeg', KVALITA))
+    if (!blob) return file
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' })
+  } catch {
+    return file
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
+
 export default function AdminPage() {
   const [key, setKey] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
@@ -63,13 +95,15 @@ export default function AdminPage() {
       const uploadedUrls: string[] = []
       for (const file of images) {
         const fd = new FormData()
-        fd.append('file', file)
+        fd.append('file', await zmensiFotku(file))
         const res = await fetch('/api/upload', {
           method: 'POST',
           headers: { 'x-admin-key': key },
           body: fd,
         })
-        if (!res.ok) throw new Error('Chyba při nahrávání fotky')
+        if (!res.ok) throw new Error(res.status === 413
+          ? `Fotka ${file.name} je moc velká`
+          : `Chyba při nahrávání fotky ${file.name}`)
         const data = await res.json()
         uploadedUrls.push(data.url)
       }
