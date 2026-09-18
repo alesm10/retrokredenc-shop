@@ -102,8 +102,7 @@ repozitáře.
   set -a && . ./.env.local && set +a
   PGPASSWORD="$DB_PASSWORD" pg_dump -h "$DB_HOST" -U "$DB_USER" "$DB_NAME"
   ```
-- **Fotky produktů žijí v `public/products/` a `uploads/` na serveru a nejsou
-  v gitu** — zálohují se zvlášť. Klon repozitáře je bez nich.
+- **Fotky produktů žijí v `uploads/` na serveru a nejsou v gitu** — zálohují se zvlášť. Klon repozitáře je bez nich.
 
 ## Hesla
 

@@ -41,10 +41,6 @@ webu. Jestli už přihlášený je, nikdo neověřoval.
   dokud se neodhlásí. Vědomě ponecháno — Verča se nemusí přihlašovat pořád.
 - Mapa webu se obnovuje jednou za hodinu — nový produkt se v ní objeví se
   zpožděním.
-- `public/products/` obsahuje fotky tří původních ukázkových produktů, které
-  už web nepoužívá.
-- Složka `navody/` a `README.md` popisují staré stavy (Vercel, NAS,
-  `products.json`). Nejsou pravda — pravda je v `CLAUDE.md` a `GOTCHAS.md`.
 - V popisu repozitáře na GitHubu (About) visí odkaz na `retrokredenc-shop.vercel.app`,
   kde nic neběží.
 - `.env.local` na Macu je z 13. 5. 2026 a má staré hodnoty. Pro práci nevadí
@@ -53,6 +49,15 @@ webu. Jestli už přihlášený je, nikdo neověřoval.
 ---
 
 ## Hotové
+
+### 10. ✅ Úklid repozitáře — 18. 9. 2026
+
+Smazáno, co popisovalo nebo obsluhovalo staré podoby webu: `navody/` (29 návodů
+k Vercelu, NASu, GitHub Pages a ruční úpravě `products.json`), `scripts/`
+(kopírování fotek z Google Drive), fotky tří ukázkových produktů
+v `public/products/` a `public/images/KAM_VLOZIT_KREDENC.md` (ležel veřejně na
+webu). `README.md` a `env.example` přepsány podle skutečnosti. V historii gitu
+všechno zůstává.
 
 ### 7. ✅ Fotky z opravdového telefonu — 18. 9. 2026
 

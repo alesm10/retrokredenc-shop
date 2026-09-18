@@ -72,9 +72,10 @@ V `.env.local` (v `.gitignore`, v historii gitu **není** — ověřeno 20. 8. 2
 | Přístup k databázi | `src/lib/db.ts`, `src/lib/produkty.ts` |
 | Ověření hesla do administrace | `src/lib/overeni.ts` (ochrana proti hádání) |
 | Komponenty a vzhled | `src/components/`, `src/styles/`, Tailwind |
-| Fotky produktů | `public/products/` (na VPS je ostrá sada) |
+| Fotky produktů | nahrávají se přes administraci do `uploads/` **na serveru** (v gitu nejsou) |
 
-Návody psané pro člověka, ne pro Clauda, jsou ve složce `navody/`.
+Staré návody (`navody/`) smazány 18. 9. 2026 — popisovaly Vercel, NAS a ruční
+úpravu `products.json`. Pravda je v `CLAUDE.md`, `GOTCHAS.md` a `README.md`.
 
 ## Nástrahy, které tenhle repozitář má
 
