@@ -124,6 +124,29 @@ Website v popisu repozitáře vede na `https://retrokredenc.cz`. Prostředí
   Při odeslání: **Úspěšné, 9 stránek** (4 stránky webu + 5 produktů).
 - Účet: Alešův Google účet (který, je v AIOS).
 
+## Návrh popisu z fotek — Claude API (od 18. 9. 2026)
+
+- Tlačítko **„✨ Navrhnout název a popis z fotek"** v administraci pošle až
+  4 fotky (zmenšené na 1024 px) na `/api/popis`, ten zavolá Claude
+  (`claude-opus-5`, se záložním modelem `fallbacks: "default"`) a vrátí název,
+  popis, kategorii, období a „co ověřit". **Nic neukládá** — jen předvyplní
+  formulář; ukládá člověk.
+- U uloženého produktu bez nových fotek vezme stávající fotky.
+- Klíč `ANTHROPIC_API_KEY` je v `.env.local` na serveru. Bez něj tlačítko hlásí
+  „AI není nastavená" (503), web jinak funguje.
+- Změřeno: ~15–18 s na návrh (nginx čeká až 60 s). Cena odhadem ~2 Kč/produkt.
+- **Platí se předplaceným kreditem, automatické dobíjení vypnuté** — víc, než je
+  kredit, se neutratí. Když dojde, tlačítko hlásí, že AI teď nejde použít;
+  dobíjí se ručně v console.anthropic.com → Billing → Buy credits.
+- ⚠ Při vkládání klíče do `.env.local` se přikopírovaly **mezery na konec
+  řádku** — kontrola tvaru bez vypsání: délka hodnoty a „jiné znaky než
+  písmena, čísla, `-`, `_`" musí být 0.
+- ⚠ V prohlížeči se fotka nesmí načítat přes `img.decode()` — ve skryté
+  záložce čeká donekonečna. Používá se `onload`.
+- Zadání chrání dvě věci, které se ukázaly při zkoušce: poznámka prodávající
+  (třeba „broušená") je fakt a AI ji nesmí přepsat; výrobce uvádí jen, když ho
+  vidí (značka, etiketa).
+
 ## Zálohy
 
 - Databáze i fotky se zálohují: na VPS `~/zaloha-db.sh` v cronu ve 3:00

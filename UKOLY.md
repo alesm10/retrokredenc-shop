@@ -51,6 +51,13 @@ berou web bez košíku (nákup je přes kontaktní formulář).
 
 ## Hotové
 
+### 12. ✅ Návrh názvu a popisu z fotek (AI) — 18. 9. 2026
+
+Tlačítko v administraci; Claude z fotek navrhne název a popis pro vyhledávače,
+Verča zkontroluje a uloží. Vyzkoušeno na serveru se skutečnými fotkami — ze
+„Sady hrnků" přečetl etiketu (Karlovarský porcelán Dubí, dekor 931). Detail
+v `GOTCHAS.md`. **Tip pro Verču: fotit i dno se značkou a etiketu.**
+
 ### 11. ✅ Nastavení GitHubu — 18. 9. 2026
 
 Zapnutá ochrana proti odeslání hesla a upozornění na zranitelné knihovny,

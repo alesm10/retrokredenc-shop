@@ -20,14 +20,19 @@ const PRAZDNY_FORMULAR = { name: '', description: '', price: '', category: 'hrnk
 
 // Fotka z mobilu má 3–5 MB, server pustí jen 1 MB — zmenšíme ji v prohlížeči.
 // Když se zmenšení nepovede, pošle se originál.
-async function zmensiFotku(file: File): Promise<File> {
+async function zmensiFotku(file: Blob & { name?: string }, maxStrana = MAX_STRANA, vzdyJpeg = false): Promise<File> {
+  const nazev = file.name || 'fotka.jpg'
   const url = URL.createObjectURL(file)
   try {
+    // onload místo img.decode() — decode ve skryté záložce čeká donekonečna
     const img = document.createElement('img')
-    img.src = url
-    await img.decode()
-    const pomer = Math.min(1, MAX_STRANA / Math.max(img.naturalWidth, img.naturalHeight))
-    if (pomer === 1 && file.size < 1_000_000) return file
+    await new Promise<void>((hotovo, chyba) => {
+      img.onload = () => hotovo()
+      img.onerror = () => chyba(new Error('Fotku nejde načíst'))
+      img.src = url
+    })
+    const pomer = Math.min(1, maxStrana / Math.max(img.naturalWidth, img.naturalHeight))
+    if (!vzdyJpeg && pomer === 1 && file.size < 1_000_000 && file instanceof File) return file
 
     const canvas = document.createElement('canvas')
     canvas.width = Math.round(img.naturalWidth * pomer)
@@ -38,14 +43,29 @@ async function zmensiFotku(file: File): Promise<File> {
     ctx.drawImage(img, 0, 0, canvas.width, canvas.height)
 
     const blob = await new Promise<Blob | null>(r => canvas.toBlob(r, 'image/jpeg', KVALITA))
-    if (!blob) return file
-    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' })
-  } catch {
-    return file
+    if (!blob) throw new Error('zmenšení se nepovedlo')
+    return new File([blob], nazev.replace(/\.[^.]+$/, '') + '.jpg', { type: 'image/jpeg' })
+  } catch (e) {
+    if (vzdyJpeg) throw e
+    return file instanceof File ? file : new File([file], nazev)
   } finally {
     URL.revokeObjectURL(url)
   }
 }
+
+// Pro AI stačí menší fotky — rychlejší odeslání a nižší cena
+async function fotkaProAI(zdroj: Blob): Promise<string> {
+  const jpeg = await zmensiFotku(zdroj, 1024, true)
+  const dataUrl = await new Promise<string>((hotovo, chyba) => {
+    const cteni = new FileReader()
+    cteni.onload = () => hotovo(cteni.result as string)
+    cteni.onerror = () => chyba(cteni.error)
+    cteni.readAsDataURL(jpeg)
+  })
+  return dataUrl.slice(dataUrl.indexOf(',') + 1)
+}
+
+type NavrhAI = { nazev: string; popis: string; kategorie: string; rok: string; overit: string }
 
 export default function AdminPage() {
   const [key, setKey] = useState('')
@@ -62,6 +82,8 @@ export default function AdminPage() {
   // Změna klíče vyrobí nové políčko pro fotky — jinak by ukazovalo staré soubory
   const [fotkyKlic, setFotkyKlic] = useState(0)
   const [message, setMessage] = useState('')
+  const [navrhuje, setNavrhuje] = useState(false)
+  const [overit, setOverit] = useState('')
 
   useEffect(() => {
     const saved = localStorage.getItem('adminKey')
@@ -114,6 +136,45 @@ export default function AdminPage() {
     setImages([])
     setImagePreviews([])
     setFotkyKlic(k => k + 1)
+    setOverit('')
+  }
+
+  async function navrhnoutPopis() {
+    setNavrhuje(true)
+    setMessage('')
+    setOverit('')
+    try {
+      // Nové fotky mají přednost; u uloženého produktu se vezmou ty stávající
+      const zdroje: Blob[] = images.length > 0
+        ? images
+        : await Promise.all(stavajici.map(async url => (await fetch(url)).blob()))
+      if (zdroje.length === 0) throw new Error('Nejdřív vyberte fotky')
+      const fotky = await Promise.all(zdroje.slice(0, 4).map(fotkaProAI))
+      const poznamka = [form.name, form.description].filter(Boolean).join('\n')
+
+      const res = await fetch('/api/popis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+        body: JSON.stringify({ fotky, poznamka }),
+      })
+      if (res.status === 401 || res.status === 429) { odhlasit(); throw new Error('Přihlaste se znovu') }
+      const data = await res.json()
+      if (!res.ok) throw new Error(data.error || 'Návrh se nepovedl')
+
+      const navrh = data as NavrhAI
+      setForm(f => ({
+        ...f,
+        name: navrh.nazev,
+        description: navrh.popis,
+        category: navrh.kategorie || f.category,
+        year: navrh.rok || f.year,
+      }))
+      setOverit(navrh.overit)
+    } catch (err: any) {
+      setMessage('✗ ' + err.message)
+    } finally {
+      setNavrhuje(false)
+    }
   }
 
   function posunFotku(i: number, smer: -1 | 1) {
@@ -355,6 +416,24 @@ export default function AdminPage() {
                 </div>
               )}
             </div>
+
+            {(images.length > 0 || stavajici.length > 0) && (
+              <div>
+                <button type="button" onClick={navrhnoutPopis} disabled={navrhuje || uploading}
+                  className="w-full py-3 border-2 border-amber-600 text-amber-800 rounded-lg font-medium disabled:opacity-50">
+                  {navrhuje ? 'AI prohlíží fotky… (až půl minuty)' : '✨ Navrhnout název a popis z fotek'}
+                </button>
+                <p className="text-xs text-gray-500 mt-1">
+                  Vyfoťte i dno se značkou. Co napíšete do názvu a popisu, AI vezme jako poznámku.
+                </p>
+              </div>
+            )}
+
+            {overit && (
+              <div className="px-4 py-3 rounded bg-amber-50 border border-amber-300 text-amber-900 text-sm">
+                <strong>Návrh od AI — před uložením zkontrolujte.</strong> {overit}
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
               <input type="checkbox" id="available" checked={form.available}

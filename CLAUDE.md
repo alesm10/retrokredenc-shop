@@ -73,6 +73,7 @@ pro zkoušku administrace se heslo předává při spuštění (`GOTCHAS.md`).
 | API pro produkty, upload, admin | `src/app/api/` |
 | Přístup k databázi | `src/lib/db.ts`, `src/lib/produkty.ts` |
 | Ověření hesla do administrace | `src/lib/overeni.ts` (ochrana proti hádání) |
+| Návrh názvu a popisu z fotek (AI) | `src/app/api/popis/route.ts` — zadání pro Clauda je v konstantě `ZADANI` |
 | Komponenty a vzhled | `src/components/`, `src/styles/`, Tailwind |
 | Fotky produktů | nahrávají se přes administraci do `uploads/` **na serveru** (v gitu nejsou) |
 
