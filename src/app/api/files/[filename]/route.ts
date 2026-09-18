@@ -8,8 +8,8 @@ const MIME: Record<string, string> = {
   gif: 'image/gif', avif: 'image/avif',
 }
 
-export async function GET(_: NextRequest, { params }: { params: { filename: string } }) {
-  const filename = path.basename(params.filename)
+export async function GET(_: NextRequest, { params }: { params: Promise<{ filename: string }> }) {
+  const filename = path.basename((await params).filename)
   const filePath = path.join(process.cwd(), 'uploads', filename)
 
   if (!fs.existsSync(filePath)) {

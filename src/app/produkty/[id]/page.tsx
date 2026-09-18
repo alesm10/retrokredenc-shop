@@ -7,7 +7,7 @@ import ProductGallery from '@/components/ProductGallery'
 export const revalidate = 60
 
 interface Props {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
 async function getProduct(id: string) {
@@ -15,7 +15,7 @@ async function getProduct(id: string) {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const product = await getProduct(params.id)
+  const product = await getProduct((await params).id)
   if (!product) return { title: 'Produkt nenalezen | Retro Kredenc' }
   return {
     title: `${product.name} | Retro Kredenc`,
@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function ProductDetailPage({ params }: Props) {
-  const product = await getProduct(params.id)
+  const product = await getProduct((await params).id)
   if (!product) notFound()
 
   const images = product.product_images

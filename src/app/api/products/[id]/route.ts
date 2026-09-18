@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import pool from '@/lib/db'
 
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (request.headers.get('x-admin-key') !== process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
   }
@@ -16,7 +16,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   try {
     await pool.query(
       `UPDATE products SET ${setClauses} WHERE id = $${fields.length + 1}`,
-      [...values, params.id]
+      [...values, (await params).id]
     )
     return NextResponse.json({ success: true })
   } catch (e: any) {
