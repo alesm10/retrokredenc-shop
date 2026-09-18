@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getProductByNumber } from '@/lib/supabase-server'
+import { getProductByNumber } from '@/lib/produkty'
 import ContactForm from '@/components/ContactForm'
 import ProductGallery from '@/components/ProductGallery'
 
@@ -11,6 +11,8 @@ interface Props {
 }
 
 async function getProduct(id: string) {
+  // Adresa s čímkoli jiným než číslem (třeba stará kralovsky1) = nenalezeno
+  if (!/^\d+$/.test(id)) return null
   return getProductByNumber(parseInt(id))
 }
 
@@ -20,6 +22,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${product.name} | Retro Kredenc`,
     description: product.description,
+    alternates: { canonical: `/produkty/${product.product_number}` },
     openGraph: {
       title: product.name,
       description: product.description,

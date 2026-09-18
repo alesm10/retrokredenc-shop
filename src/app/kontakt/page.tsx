@@ -8,6 +8,7 @@ export const metadata: Metadata = {
     title: 'Kontakt | Retro Kredenc',
     description: 'Kontaktujte nás ohledně retro československého porcelánu',
   },
+  alternates: { canonical: '/kontakt' },
 }
 
 export default function KontaktPage() {

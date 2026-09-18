@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { overAdmina } from '@/lib/overeni'
 
 export async function GET(request: NextRequest) {
-  const authHeader = request.headers.get('x-admin-key')
-  if (authHeader !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Špatné heslo' }, { status: 401 })
-  }
+  const zamitnuto = await overAdmina(request)
+  if (zamitnuto) return zamitnuto
   return NextResponse.json({ ok: true })
 }

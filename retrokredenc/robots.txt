@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://retrokredenc.cz/sitemap.xml

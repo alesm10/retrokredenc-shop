@@ -1,9 +1,14 @@
+import { Metadata } from 'next'
 import Link from 'next/link'
 import ProductGrid from '@/components/ProductGrid'
 import HeroImage from '@/components/HeroImage'
-import { getProducts } from '@/lib/supabase-server'
+import { getProducts } from '@/lib/produkty'
 
 export const revalidate = 60
+
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+}
 
 export default async function Home() {
   const data = await getProducts(true, 6)

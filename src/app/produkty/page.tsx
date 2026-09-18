@@ -1,6 +1,6 @@
 import { Metadata } from 'next'
 import ProductGrid from '@/components/ProductGrid'
-import { getProducts } from '@/lib/supabase-server'
+import { getProducts } from '@/lib/produkty'
 
 export const metadata: Metadata = {
   title: 'Produkty | Retro Kredenc - Československý porcelán',
@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     title: 'Produkty | Retro Kredenc',
     description: 'Prohlédněte si naši nabídku autentického československého porcelánu',
   },
+  alternates: { canonical: '/produkty' },
 }
 
 export const revalidate = 60

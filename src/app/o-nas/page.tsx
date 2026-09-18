@@ -7,6 +7,7 @@ export const metadata: Metadata = {
     title: 'O nás | Retro Kredenc',
     description: 'Poznejte příběh Retro Kredenc',
   },
+  alternates: { canonical: '/o-nas' },
 }
 
 export default function ONasPage() {

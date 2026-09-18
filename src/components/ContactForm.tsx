@@ -9,6 +9,7 @@ export default function ContactForm({ productId }: { productId?: string }) {
     email: '',
     message: '',
     product: productId || '',
+    web: '',
   })
   const [gdprConsent, setGdprConsent] = useState(false)
   const [status, setStatus] = useState<'idle' | 'sending' | 'success' | 'error'>('idle')
@@ -28,7 +29,7 @@ export default function ContactForm({ productId }: { productId?: string }) {
 
       if (response.ok) {
         setStatus('success')
-        setFormData({ name: '', email: '', message: '', product: productId || '' })
+        setFormData({ name: '', email: '', message: '', product: productId || '', web: '' })
       } else {
         setStatus('error')
       }
@@ -91,6 +92,18 @@ export default function ContactForm({ productId }: { productId?: string }) {
           />
         </div>
       )}
+
+      {/* Past na roboty — člověk pole nevidí, robot ho vyplní */}
+      <input
+        type="text"
+        name="web"
+        value={formData.web}
+        onChange={handleChange}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="hidden"
+      />
 
       <div>
         <label htmlFor="message" className="block text-sm font-medium mb-2">

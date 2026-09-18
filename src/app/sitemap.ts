@@ -1,13 +1,15 @@
 import { MetadataRoute } from 'next'
-import { getProducts } from '@/data/products'
+import { getProducts } from '@/lib/produkty'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export const revalidate = 3600
+
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://retrokredenc.cz'
-  const products = getProducts()
+  const products = await getProducts()
 
   const productUrls = products.map((product) => ({
-    url: `${baseUrl}/produkty/${product.id}`,
-    lastModified: new Date(),
+    url: `${baseUrl}/produkty/${product.product_number}`,
+    lastModified: new Date(product.created_at),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))

@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Obchodní podmínky | Retro Kredenc',
   description: 'Obchodní podmínky internetového obchodu Retro Kredenc.',
+  alternates: { canonical: '/obchodni-podminky' },
 }
 
 export default function ObchodniPodminkyPage() {

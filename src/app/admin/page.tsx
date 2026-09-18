@@ -1,7 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Image from 'next/image'
 
 type Product = {
   id: string
@@ -11,11 +10,13 @@ type Product = {
   category: string
   year: string
   available: boolean
+  product_number: number
   product_images: { url: string; is_primary: boolean }[]
 }
 
 const MAX_STRANA = 1600
 const KVALITA = 0.82
+const PRAZDNY_FORMULAR = { name: '', description: '', price: '', category: 'hrnky', year: '', available: true }
 
 // Fotka z mobilu má 3–5 MB, server pustí jen 1 MB — zmenšíme ji v prohlížeči.
 // Když se zmenšení nepovede, pošle se originál.
@@ -49,41 +50,82 @@ async function zmensiFotku(file: File): Promise<File> {
 export default function AdminPage() {
   const [key, setKey] = useState('')
   const [authenticated, setAuthenticated] = useState(false)
-  const [loginError, setLoginError] = useState(false)
+  const [loginError, setLoginError] = useState('')
   const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(false)
   const [uploading, setUploading] = useState(false)
-  const [form, setForm] = useState({
-    name: '', description: '', price: '', category: 'hrnky', year: '', available: true
-  })
+  const [form, setForm] = useState(PRAZDNY_FORMULAR)
+  const [upravuje, setUpravuje] = useState<Product | null>(null)
   const [images, setImages] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
+  // Změna klíče vyrobí nové políčko pro fotky — jinak by ukazovalo staré soubory
+  const [fotkyKlic, setFotkyKlic] = useState(0)
   const [message, setMessage] = useState('')
 
   useEffect(() => {
     const saved = localStorage.getItem('adminKey')
-    if (saved) { setKey(saved); setAuthenticated(true); loadProducts(saved) }
+    if (!saved) return
+    // Uložené heslo může být staré (po výměně hesla) — ověřit, ne jen převzít
+    fetch('/api/admin', { headers: { 'x-admin-key': saved } }).then(res => {
+      if (res.ok) { setKey(saved); setAuthenticated(true); loadProducts() }
+      else localStorage.removeItem('adminKey')
+    })
   }, [])
 
-  async function loadProducts(adminKey: string) {
+  async function loadProducts() {
     const res = await fetch('/api/products')
     if (res.ok) setProducts(await res.json())
   }
 
+  function odhlasit() {
+    localStorage.removeItem('adminKey')
+    setAuthenticated(false)
+    setKey('')
+  }
+
+  // Server odmítl heslo → zpátky na přihlášení, ať se nezkouší dál
+  function kontrolaOdpovedi(res: Response, chyba: string) {
+    if (res.status === 401 || res.status === 429) { odhlasit(); throw new Error('Přihlaste se znovu') }
+    if (!res.ok) throw new Error(chyba)
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault()
-    setLoginError(false)
+    setLoginError('')
     const res = await fetch('/api/admin', { headers: { 'x-admin-key': key } })
-    if (res.status === 401) { setLoginError(true); return }
+    if (res.status === 429) { setLoginError('Příliš mnoho pokusů. Zkus to za 15 minut.'); return }
+    if (!res.ok) { setLoginError('Špatné heslo, zkus to znovu.'); return }
     localStorage.setItem('adminKey', key)
     setAuthenticated(true)
-    loadProducts(key)
+    loadProducts()
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
     const files = Array.from(e.target.files || [])
     setImages(files)
     setImagePreviews(files.map(f => URL.createObjectURL(f)))
+  }
+
+  function vycistitFormular() {
+    setForm(PRAZDNY_FORMULAR)
+    setUpravuje(null)
+    setImages([])
+    setImagePreviews([])
+    setFotkyKlic(k => k + 1)
+  }
+
+  function zacitUpravu(product: Product) {
+    vycistitFormular()
+    setUpravuje(product)
+    setForm({
+      name: product.name,
+      description: product.description || '',
+      price: String(product.price),
+      category: product.category || 'hrnky',
+      year: product.year || '',
+      available: product.available,
+    })
+    setMessage('')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -101,34 +143,38 @@ export default function AdminPage() {
           headers: { 'x-admin-key': key },
           body: fd,
         })
-        if (!res.ok) throw new Error(res.status === 413
+        kontrolaOdpovedi(res, res.status === 413
           ? `Fotka ${file.name} je moc velká`
           : `Chyba při nahrávání fotky ${file.name}`)
         const data = await res.json()
         uploadedUrls.push(data.url)
       }
 
-      const res = await fetch('/api/products', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
-        body: JSON.stringify({
-          name: form.name,
-          description: form.description,
-          price: parseInt(form.price),
-          category: form.category,
-          year: form.year,
-          available: form.available,
-          images: uploadedUrls,
-        }),
-      })
+      const udaje = {
+        name: form.name,
+        description: form.description,
+        price: parseInt(form.price),
+        category: form.category,
+        year: form.year,
+        available: form.available,
+        images: uploadedUrls,
+      }
+      const res = upravuje
+        ? await fetch(`/api/products/${upravuje.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+            body: JSON.stringify(udaje),
+          })
+        : await fetch('/api/products', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+            body: JSON.stringify(udaje),
+          })
+      kontrolaOdpovedi(res, 'Chyba při ukládání produktu')
 
-      if (!res.ok) throw new Error('Chyba při ukládání produktu')
-
-      setMessage('✓ Produkt byl přidán!')
-      setForm({ name: '', description: '', price: '', category: 'hrnky', year: '', available: true })
-      setImages([])
-      setImagePreviews([])
-      loadProducts(key)
+      setMessage(upravuje ? '✓ Změny uloženy!' : '✓ Produkt byl přidán!')
+      vycistitFormular()
+      loadProducts()
     } catch (err: any) {
       setMessage('✗ ' + err.message)
     } finally {
@@ -137,22 +183,33 @@ export default function AdminPage() {
   }
 
   async function handleDelete(id: string, name: string) {
-    if (!confirm(`Opravdu smazat "${name}"?`)) return
-    await fetch('/api/products', {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
-      body: JSON.stringify({ id }),
-    })
-    loadProducts(key)
+    if (!confirm(`Opravdu smazat "${name}"? Smažou se i jeho fotky.`)) return
+    try {
+      const res = await fetch('/api/products', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+        body: JSON.stringify({ id }),
+      })
+      kontrolaOdpovedi(res, 'Produkt se nepodařilo smazat')
+      if (upravuje?.id === id) vycistitFormular()
+      loadProducts()
+    } catch (err: any) {
+      setMessage('✗ ' + err.message)
+    }
   }
 
   async function toggleAvailable(product: Product) {
-    await fetch(`/api/products/${product.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
-      body: JSON.stringify({ available: !product.available }),
-    })
-    loadProducts(key)
+    try {
+      const res = await fetch(`/api/products/${product.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'x-admin-key': key },
+        body: JSON.stringify({ available: !product.available }),
+      })
+      kontrolaOdpovedi(res, 'Změna se nepodařila')
+      loadProducts()
+    } catch (err: any) {
+      setMessage('✗ ' + err.message)
+    }
   }
 
   if (!authenticated) {
@@ -170,7 +227,7 @@ export default function AdminPage() {
             className="w-full px-4 py-2 border rounded-lg"
           />
           {loginError && (
-            <p className="text-red-600 text-sm text-center">Špatné heslo, zkus to znovu.</p>
+            <p className="text-red-600 text-sm text-center">{loginError}</p>
           )}
           <button type="submit" className="btn-primary w-full">Přihlásit se</button>
         </form>
@@ -182,15 +239,17 @@ export default function AdminPage() {
     <div className="min-h-screen bg-gray-50">
       <div className="bg-white border-b px-4 py-4 flex justify-between items-center">
         <h1 className="text-xl font-serif">Admin panel — Retro Kredenc</h1>
-        <button onClick={() => { localStorage.removeItem('adminKey'); setAuthenticated(false) }}
+        <button onClick={odhlasit}
           className="text-sm text-gray-500 hover:text-gray-800">Odhlásit</button>
       </div>
 
       <div className="max-w-4xl mx-auto p-4 space-y-8">
 
-        {/* Formulář pro přidání produktu */}
+        {/* Formulář pro přidání nebo úpravu produktu */}
         <div className="bg-white rounded-xl shadow p-6">
-          <h2 className="text-xl font-serif mb-6">Přidat nový produkt</h2>
+          <h2 className="text-xl font-serif mb-6">
+            {upravuje ? `Úprava produktu č. ${upravuje.product_number}` : 'Přidat nový produkt'}
+          </h2>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
@@ -234,8 +293,17 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Fotky</label>
-              <input type="file" multiple accept="image/*"
+              <label className="block text-sm font-medium mb-1">
+                {upravuje ? 'Přidat další fotky' : 'Fotky'}
+              </label>
+              {upravuje && upravuje.product_images.length > 0 && (
+                <div className="flex gap-2 mb-2 flex-wrap">
+                  {upravuje.product_images.map((img, i) => (
+                    <img key={i} src={img.url} alt="" className="w-16 h-16 object-cover rounded-lg border opacity-70" />
+                  ))}
+                </div>
+              )}
+              <input key={fotkyKlic} type="file" multiple accept="image/*"
                 onChange={handleImageChange}
                 className="w-full px-3 py-2 border rounded-lg" />
               {imagePreviews.length > 0 && (
@@ -262,8 +330,14 @@ export default function AdminPage() {
 
             <button type="submit" disabled={uploading}
               className="btn-primary w-full disabled:opacity-50">
-              {uploading ? 'Nahrávám...' : 'Přidat produkt'}
+              {uploading ? 'Ukládám...' : upravuje ? 'Uložit změny' : 'Přidat produkt'}
             </button>
+            {upravuje && (
+              <button type="button" onClick={vycistitFormular}
+                className="w-full py-2 text-gray-600 hover:text-gray-900">
+                Zrušit úpravu
+              </button>
+            )}
           </form>
         </div>
 
@@ -272,21 +346,33 @@ export default function AdminPage() {
           <h2 className="text-xl font-serif mb-6">Produkty ({products.length})</h2>
           <div className="space-y-3">
             {products.map(product => (
-              <div key={product.id} className="flex items-center gap-4 p-3 border rounded-lg">
-                {product.product_images?.[0] && (
-                  <img src={product.product_images[0].url} alt=""
-                    className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
-                )}
-                <div className="flex-1 min-w-0">
-                  <div className="font-medium truncate">{product.name}</div>
-                  <div className="text-sm text-gray-500">{product.price} Kč · {product.category}</div>
+              <div key={product.id} className="p-3 border rounded-lg">
+                <div className="flex items-center gap-3">
+                  {product.product_images?.[0] && (
+                    <img src={product.product_images[0].url} alt=""
+                      className="w-16 h-16 object-cover rounded-lg flex-shrink-0" />
+                  )}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-medium">{product.name}</div>
+                    <div className="text-sm text-gray-500">
+                      č. {product.product_number} · {product.price} Kč · {product.category}
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 flex-shrink-0">
+                <div className="flex flex-wrap items-center gap-2 mt-3">
                   <span className={`text-xs px-2 py-1 rounded-full ${product.available ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
-                    {product.available ? 'Dostupné' : 'Nedostupné'}
+                    {product.available ? 'Dostupné' : 'Prodáno'}
                   </span>
+                  <button onClick={() => toggleAvailable(product)}
+                    className="text-sm px-3 py-1 border rounded-lg hover:bg-gray-50">
+                    {product.available ? 'Označit jako prodané' : 'Vrátit do prodeje'}
+                  </button>
+                  <button onClick={() => zacitUpravu(product)}
+                    className="text-sm px-3 py-1 border rounded-lg hover:bg-gray-50">
+                    Upravit
+                  </button>
                   <button onClick={() => handleDelete(product.id, product.name)}
-                    className="text-red-500 hover:text-red-700 text-sm px-2 py-1">
+                    className="text-sm px-3 py-1 text-red-600 hover:text-red-800 ml-auto">
                     Smazat
                   </button>
                 </div>

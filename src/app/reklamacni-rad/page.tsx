@@ -3,6 +3,7 @@ import { Metadata } from 'next'
 export const metadata: Metadata = {
   title: 'Reklamační řád | Retro Kredenc',
   description: 'Reklamační řád internetového obchodu Retro Kredenc.',
+  alternates: { canonical: '/reklamacni-rad' },
 }
 
 export default function ReklamacniRadPage() {

@@ -4,6 +4,7 @@ import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://retrokredenc.cz'),
   title: 'Retro Kredenc - Krása starých časů | Poklady které nezestárly',
   description: 'Krása starých časů - Poklady které nezestárly. Objevte krásu retro československého porcelánu z let 1950-1989. Originální hrnečky, talířky a další kousky z dob Československa.',
   keywords: 'retro porcelán, československý porcelán, retro hrnečky, retro talířky, vintage porcelán, Československo 50-89, poklady které nezestárly',
@@ -18,9 +19,6 @@ export const metadata: Metadata = {
   robots: {
     index: true,
     follow: true,
-  },
-  alternates: {
-    canonical: 'https://retrokredenc.cz',
   },
 }
 

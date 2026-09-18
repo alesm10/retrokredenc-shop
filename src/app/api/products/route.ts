@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
+import path from 'path'
+import fs from 'fs/promises'
 import pool from '@/lib/db'
-import { getProducts } from '@/lib/supabase-server'
+import { getProducts } from '@/lib/produkty'
+import { overAdmina } from '@/lib/overeni'
 
 export async function GET() {
   try {
@@ -12,9 +15,8 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  if (request.headers.get('x-admin-key') !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
-  }
+  const zamitnuto = await overAdmina(request)
+  if (zamitnuto) return zamitnuto
 
   const body = await request.json()
   const { images, ...productData } = body
@@ -51,13 +53,19 @@ export async function POST(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  if (request.headers.get('x-admin-key') !== process.env.ADMIN_PASSWORD) {
-    return NextResponse.json({ error: 'Nepovolen přístup' }, { status: 401 })
-  }
+  const zamitnuto = await overAdmina(request)
+  if (zamitnuto) return zamitnuto
 
   const { id } = await request.json()
   try {
+    const { rows } = await pool.query('SELECT url FROM product_images WHERE product_id = $1', [id])
     await pool.query('DELETE FROM products WHERE id = $1', [id])
+
+    // Nahrané fotky smazaného produktu by jinak zůstaly ležet na disku
+    for (const { url } of rows) {
+      if (!url.startsWith('/api/files/')) continue
+      await fs.unlink(path.join(process.cwd(), 'uploads', path.basename(url))).catch(() => {})
+    }
     return NextResponse.json({ success: true })
   } catch (e: any) {
     return NextResponse.json({ error: e.message }, { status: 500 })
