@@ -22,13 +22,6 @@ při kompletní revizi. Ta revize proběhla 18. 9. (bod 6).
 
 ## Otevřené
 
-### 7. První produkt z opravdového telefonu
-
-Zmenšování fotek je vyzkoušené jen v prohlížeči na Macu, který se tváří jako
-mobil. **Až Verča přidá první produkt, ověřit, že fotky prošly** a že se na
-stránce produktu zobrazují. Kdyby ne — chybová hláška v administraci teď
-říká, která fotka neprošla a proč.
-
 ### 8. Propagace webu — nápad, zatím se nestaví
 
 Automatizovat se to dá (na VPS už běží n8n): nové zboží samo na Facebook
@@ -44,7 +37,6 @@ webu. Jestli už přihlášený je, nikdo neověřoval.
 
 ### 9. Drobnosti, na které se narazilo — neurgentní
 
-- U uloženého produktu jdou fotky jen **přidávat**, ne mazat ani přeřadit.
 - Heslo do administrace si telefon pamatuje v prohlížeči (`localStorage`),
   dokud se neodhlásí. Vědomě ponecháno — Verča se nemusí přihlašovat pořád.
 - Mapa webu se obnovuje jednou za hodinu — nový produkt se v ní objeví se
@@ -61,6 +53,16 @@ webu. Jestli už přihlášený je, nikdo neověřoval.
 ---
 
 ## Hotové
+
+### 7. ✅ Fotky z opravdového telefonu — 18. 9. 2026
+
+První skutečný produkt („Broušená váza", 20:12) přidaný z telefonu s Androidem:
+3 fotky po 80–145 kB, zmenšování v telefonu funguje.
+
+Při té zkoušce Aleš našel: **u uloženého produktu nešlo fotky smazat ani
+přeřadit** — jen smazat celý produkt a vystavit znovu. Opraveno týž večer:
+při úpravě má každá fotka tlačítka ◀ ✕ ▶, první je hlavní (ukazuje se
+v katalogu). Odebraná fotka se smaže z databáze i z disku až po „Uložit změny".
 
 ### 6. ✅ Revize webu — 18. 9. 2026
 

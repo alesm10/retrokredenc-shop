@@ -55,6 +55,8 @@ export default function AdminPage() {
   const [uploading, setUploading] = useState(false)
   const [form, setForm] = useState(PRAZDNY_FORMULAR)
   const [upravuje, setUpravuje] = useState<Product | null>(null)
+  // Stávající fotky upravovaného produktu v pořadí, jak se uloží (první = hlavní)
+  const [stavajici, setStavajici] = useState<string[]>([])
   const [images, setImages] = useState<File[]>([])
   const [imagePreviews, setImagePreviews] = useState<string[]>([])
   // Změna klíče vyrobí nové políčko pro fotky — jinak by ukazovalo staré soubory
@@ -108,14 +110,28 @@ export default function AdminPage() {
   function vycistitFormular() {
     setForm(PRAZDNY_FORMULAR)
     setUpravuje(null)
+    setStavajici([])
     setImages([])
     setImagePreviews([])
     setFotkyKlic(k => k + 1)
   }
 
+  function posunFotku(i: number, smer: -1 | 1) {
+    const j = i + smer
+    if (j < 0 || j >= stavajici.length) return
+    const nove = [...stavajici]
+    ;[nove[i], nove[j]] = [nove[j], nove[i]]
+    setStavajici(nove)
+  }
+
+  function odeberFotku(i: number) {
+    setStavajici(stavajici.filter((_, k) => k !== i))
+  }
+
   function zacitUpravu(product: Product) {
     vycistitFormular()
     setUpravuje(product)
+    setStavajici(product.product_images.map(i => i.url))
     setForm({
       name: product.name,
       description: product.description || '',
@@ -158,6 +174,7 @@ export default function AdminPage() {
         year: form.year,
         available: form.available,
         images: uploadedUrls,
+        ...(upravuje ? { fotky: stavajici } : {}),
       }
       const res = upravuje
         ? await fetch(`/api/products/${upravuje.id}`, {
@@ -293,16 +310,40 @@ export default function AdminPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">
-                {upravuje ? 'Přidat další fotky' : 'Fotky'}
-              </label>
-              {upravuje && upravuje.product_images.length > 0 && (
-                <div className="flex gap-2 mb-2 flex-wrap">
-                  {upravuje.product_images.map((img, i) => (
-                    <img key={i} src={img.url} alt="" className="w-16 h-16 object-cover rounded-lg border opacity-70" />
-                  ))}
+              <label className="block text-sm font-medium mb-1">Fotky</label>
+              {upravuje && (
+                <div className="mb-3">
+                  <p className="text-sm text-gray-500 mb-2">
+                    {stavajici.length > 0
+                      ? 'Stávající fotky — první je hlavní. Změny se uloží tlačítkem „Uložit změny".'
+                      : 'Produkt nemá žádnou fotku.'}
+                  </p>
+                  <div className="flex gap-3 flex-wrap">
+                    {stavajici.map((url, i) => (
+                      <div key={url} className="w-24">
+                        <div className="relative">
+                          <img src={url} alt="" className="w-24 h-24 object-cover rounded-lg border" />
+                          {i === 0 && (
+                            <span className="absolute top-1 left-1 text-xs bg-white/90 px-1.5 rounded">hlavní</span>
+                          )}
+                        </div>
+                        <div className="flex mt-1 gap-1">
+                          <button type="button" onClick={() => posunFotku(i, -1)} disabled={i === 0}
+                            aria-label="Posunout dopředu"
+                            className="flex-1 h-9 border rounded-lg disabled:opacity-30">◀</button>
+                          <button type="button" onClick={() => odeberFotku(i)}
+                            aria-label="Odebrat fotku"
+                            className="flex-1 h-9 border rounded-lg text-red-600">✕</button>
+                          <button type="button" onClick={() => posunFotku(i, 1)} disabled={i === stavajici.length - 1}
+                            aria-label="Posunout dozadu"
+                            className="flex-1 h-9 border rounded-lg disabled:opacity-30">▶</button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
+              {upravuje && <p className="text-sm text-gray-500 mb-1">Přidat další fotky:</p>}
               <input key={fotkyKlic} type="file" multiple accept="image/*"
                 onChange={handleImageChange}
                 className="w-full px-3 py-2 border rounded-lg" />

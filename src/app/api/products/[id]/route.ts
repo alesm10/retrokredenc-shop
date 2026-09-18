@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
+import path from 'path'
+import fs from 'fs/promises'
 import pool from '@/lib/db'
 import { overAdmina } from '@/lib/overeni'
 
@@ -10,8 +12,11 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   if (zamitnuto) return zamitnuto
 
   const { id } = await params
-  const { images, ...body } = await request.json()
+  // fotky = stávající fotky v novém pořadí (co v seznamu chybí, se smaže),
+  // images = nově nahrané fotky, přidají se na konec
+  const { images, fotky, ...body } = await request.json()
   const fields = Object.keys(body).filter((f) => POVOLENA_POLE.includes(f))
+  const smazaneSoubory: string[] = []
 
   const client = await pool.connect()
   try {
@@ -23,6 +28,21 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
         `UPDATE products SET ${setClauses} WHERE id = $${fields.length + 1}`,
         [...fields.map((f) => body[f]), id]
       )
+    }
+
+    if (Array.isArray(fotky)) {
+      const { rows } = await client.query('SELECT id, url FROM product_images WHERE product_id = $1', [id])
+      for (const radek of rows) {
+        if (fotky.includes(radek.url)) continue
+        await client.query('DELETE FROM product_images WHERE id = $1', [radek.id])
+        smazaneSoubory.push(radek.url)
+      }
+      for (let i = 0; i < fotky.length; i++) {
+        await client.query(
+          'UPDATE product_images SET order_index = $1, is_primary = $2 WHERE product_id = $3 AND url = $4',
+          [i, i === 0, id, fotky[i]]
+        )
+      }
     }
 
     // Nové fotky se přidají za ty, které produkt už má
@@ -40,11 +60,17 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     }
 
     await client.query('COMMIT')
-    return NextResponse.json({ success: true })
   } catch (e: any) {
     await client.query('ROLLBACK')
     return NextResponse.json({ error: e.message }, { status: 500 })
   } finally {
     client.release()
   }
+
+  // Soubory až po úspěšném uložení — kdyby se uložení nepovedlo, fotky zůstanou
+  for (const url of smazaneSoubory) {
+    if (!url.startsWith('/api/files/')) continue
+    await fs.unlink(path.join(process.cwd(), 'uploads', path.basename(url))).catch(() => {})
+  }
+  return NextResponse.json({ success: true })
 }
