@@ -41,14 +41,17 @@ webu. Jestli už přihlášený je, nikdo neověřoval.
   dokud se neodhlásí. Vědomě ponecháno — Verča se nemusí přihlašovat pořád.
 - Mapa webu se obnovuje jednou za hodinu — nový produkt se v ní objeví se
   zpožděním.
-- V popisu repozitáře na GitHubu (About) visí odkaz na `retrokredenc-shop.vercel.app`,
-  kde nic neběží.
 - `.env.local` na Macu je z 13. 5. 2026 a má staré hodnoty. Pro práci nevadí
   (na Macu se web plně nesestaví, viz `GOTCHAS.md`).
 
 ---
 
 ## Hotové
+
+### 11. ✅ Nastavení GitHubu — 18. 9. 2026
+
+Zapnutá ochrana proti odeslání hesla a upozornění na zranitelné knihovny,
+vypnuté Actions, Pages, Wiki, Projects a Issues. Proč a co přesně: `GOTCHAS.md`.
 
 ### 10. ✅ Úklid repozitáře — 18. 9. 2026
 

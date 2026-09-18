@@ -92,6 +92,27 @@ statický export. Soubory smazány, Pages v nastavení vypnuté (Source → None
 Na `retrokredenc-shop.vercel.app` nic neběží (404), zbyl jen odkaz v popisu
 repozitáře.
 
+## Nastavení repozitáře na GitHubu (18. 9. 2026)
+
+Repozitář zůstává **veřejný** — vědomě: ochrana proti odeslání hesla (Push
+protection) je zdarma jen pro veřejné repozitáře a má větší cenu než skrytí
+adresy serveru, která se dá zjistit z domény.
+
+| Zapnuto | Proč |
+|---|---|
+| **Secret Protection + Push protection** | GitHub odmítne commit, ve kterém pozná heslo nebo klíč (13. 5. 2026 by zastavil únik) |
+| **Dependabot alerts** (+ Dependency graph) | e-mail, když se najde díra v Next.js nebo jiné knihovně |
+
+| Vypnuto | Proč |
+|---|---|
+| **GitHub Actions** | nic je nepoužívá; nasazuje se na serveru |
+| Pages, Wiki, Projects, Issues | nepoužívají se; Issues by u veřejného repozitáře zval cizí „hlášení" |
+| Dependabot security/version updates, CodeQL, Copilot Autofix | zakládaly by samy návrhy změn — aktualizace se dělají ručně, přes zkušební kopii |
+
+Website v popisu repozitáře vede na `https://retrokredenc.cz`. Prostředí
+`github-pages` a `Production` smazána; 85 starých záznamů o nasazení zůstalo
+(bez přihlášení k API nejdou smazat, nic nedělají).
+
 ## Zálohy
 
 - Databáze i fotky se zálohují: na VPS `~/zaloha-db.sh` v cronu ve 3:00
