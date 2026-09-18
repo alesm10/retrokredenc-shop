@@ -89,8 +89,8 @@ původního vedle s příponou `.zaloha-2026-09-18`):
 Do 18. 9. 2026 visela na `alesm10.github.io/retrokredenc-shop` **veřejně stará
 kopie e-shopu** — GitHub Pages sestavoval z kořene repozitáře, kde ležel
 statický export. Soubory smazány, Pages v nastavení vypnuté (Source → None).
-Na `retrokredenc-shop.vercel.app` nic neběží (404), zbyl jen odkaz v popisu
-repozitáře.
+Na `retrokredenc-shop.vercel.app` nic neběží (404); odkaz v popisu repozitáře
+nahrazen adresou `https://retrokredenc.cz`.
 
 ## Nastavení repozitáře na GitHubu (18. 9. 2026)
 
