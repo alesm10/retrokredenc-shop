@@ -40,6 +40,14 @@ kuse (FB skupiny, Vinted, Aukro) jde hned; vedení lidí na celý web dává smy
 od zhruba 20–30 kusů a pravidelného přísunu. Ověřit, jestli Zboží.cz a Heureka
 berou web bez košíku (nákup je přes kontaktní formulář).
 
+### 13. Doladit zadání AI návrhu popisu — sbírá se zpětná vazba
+
+Aleš 18. 9. po prvních zkouškách: **popis moc dlouhý** a **AI započítala věci
+z fotky do předmětu** (u teriny popsala i to, co k ní nepatřilo). Navrženo:
+2–3 věty místo 3–5; popisovat jen prodávaný kus, pozadí a rekvizity ignorovat,
+nejisté části (poklička, podšálek) do „ověřit". Aleš si zapisuje věty, které
+maže — podle nich doladit zadání (`ZADANI` v `src/app/api/popis/route.ts`).
+
 ### 9. Drobnosti, na které se narazilo — neurgentní
 
 - Heslo do administrace si telefon pamatuje v prohlížeči (`localStorage`),
