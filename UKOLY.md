@@ -44,7 +44,8 @@ berou web bez košíku (nákup je přes kontaktní formulář).
 stránce produktu *„aktivní tlačítko Koupit / Do košíku, nebo podobný způsob, jak
 zboží objednat"* ([landing page requirements](https://support.google.com/merchants/answer/4752265)).
 Kontaktní formulář jako náhradu nikde neuznává — hrozí zamítnutí produktů.
-**Před Merchant Center tedy přidat tlačítko „Objednat"**, které odešle objednávku
+**Před Merchant Center tedy přidat tlačítko „Objednat"** (Aleš 19. 9.: udělá se
+spolu s propagací), které odešle objednávku
 (jméno, adresa, doprava), platba může zůstat převodem. Dál potřeba: ceny dopravy
 a pravidla vracení (do Merchant Center i do údajů `shippingDetails`,
 `hasMerchantReturnPolicy`). Vintage zboží čárový kód nepotřebuje, jen stav „použité".
