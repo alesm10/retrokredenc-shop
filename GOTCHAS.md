@@ -124,6 +124,12 @@ Website v popisu repozitáře vede na `https://retrokredenc.cz`. Prostředí
   Při odeslání: **Úspěšné, 9 stránek** (4 stránky webu + 5 produktů).
 - Účet: Alešův Google účet (který, je v AIOS).
 
+## Období výroby (dřív „rok", od 19. 9. 2026)
+
+Sloupec v databázi se dál jmenuje `year`, na webu i v administraci je to
+**„Období"** (nepovinné). Hodnoty jako „neuvedeno", „nevím", „?" web bere jako
+prázdné a nic nezobrazí — `src/lib/obdobi.ts`. Data se kvůli tomu neměnila.
+
 ## Návrh popisu z fotek — Claude API (od 18. 9. 2026)
 
 - Tlačítko **„✨ Navrhnout název a popis z fotek"** v administraci pošle až
