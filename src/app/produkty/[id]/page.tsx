@@ -3,6 +3,9 @@ import { notFound } from 'next/navigation'
 import { getProductByNumber } from '@/lib/produkty'
 import ContactForm from '@/components/ContactForm'
 import ProductGallery from '@/components/ProductGallery'
+import { obdobi } from '@/lib/obdobi'
+
+const WEB = 'https://retrokredenc.cz'
 
 export const revalidate = 60
 
@@ -39,16 +42,24 @@ export default async function ProductDetailPage({ params }: Props) {
     ?.sort((a, b) => a.order_index - b.order_index)
     .map((i) => i.url) || []
 
+  const adresa = `${WEB}/produkty/${product.product_number}`
+  const obdobiVyroby = obdobi(product.year)
+
+  // Údaje pro Google (karta Nákupy, Merchant Center): úplné adresy, použité zboží
   const jsonLd = {
     '@context': 'https://schema.org',
     '@type': 'Product',
     name: product.name,
     description: product.description,
-    image: images,
+    image: images.map((url) => (url.startsWith('http') ? url : WEB + url)),
+    url: adresa,
+    sku: String(product.product_number),
     offers: {
       '@type': 'Offer',
+      url: adresa,
       price: product.price,
       priceCurrency: 'CZK',
+      itemCondition: 'https://schema.org/UsedCondition',
       availability: product.available
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
@@ -68,7 +79,7 @@ export default async function ProductDetailPage({ params }: Props) {
             <div>
               <h1 className="text-3xl md:text-4xl font-serif mb-4">{product.name}</h1>
               <div className="space-y-4 mb-6">
-                {product.year && <p className="text-lg text-gray-600">Rok: {product.year}</p>}
+                {obdobiVyroby && <p className="text-lg text-gray-600">Období: {obdobiVyroby}</p>}
                 <p className="text-3xl font-semibold text-primary">{product.price} Kč</p>
                 <p className="text-gray-700 leading-relaxed">{product.description}</p>
               </div>

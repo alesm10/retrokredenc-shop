@@ -356,10 +356,11 @@ export default function AdminPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1">Rok výroby</label>
-                <input type="text" placeholder="např. 1970-1980" value={form.year}
+                <label className="block text-sm font-medium mb-1">Období výroby (nepovinné)</label>
+                <input type="text" placeholder="např. 70. léta, 1960–1970, kolem 1950" value={form.year}
                   onChange={e => setForm({...form, year: e.target.value})}
                   className="w-full px-3 py-2 border rounded-lg" />
+                <p className="text-xs text-gray-500 mt-1">Když nevíte, nechte prázdné — na webu se pak neukáže.</p>
               </div>
             </div>
 

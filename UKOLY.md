@@ -40,6 +40,16 @@ kuse (FB skupiny, Vinted, Aukro) jde hned; vedení lidí na celý web dává smy
 od zhruba 20–30 kusů a pravidelného přísunu. Ověřit, jestli Zboží.cz a Heureka
 berou web bez košíku (nákup je přes kontaktní formulář).
 
+**Google Merchant Center / karta Nákupy — ověřeno 19. 9. 2026:** Google chce na
+stránce produktu *„aktivní tlačítko Koupit / Do košíku, nebo podobný způsob, jak
+zboží objednat"* ([landing page requirements](https://support.google.com/merchants/answer/4752265)).
+Kontaktní formulář jako náhradu nikde neuznává — hrozí zamítnutí produktů.
+**Před Merchant Center tedy přidat tlačítko „Objednat"**, které odešle objednávku
+(jméno, adresa, doprava), platba může zůstat převodem. Dál potřeba: ceny dopravy
+a pravidla vracení (do Merchant Center i do údajů `shippingDetails`,
+`hasMerchantReturnPolicy`). Vintage zboží čárový kód nepotřebuje, jen stav „použité".
+Search Console hlásí 19. 9.: 2 aktivní produkty se nezobrazují na kartě Nákupy.
+
 ### 13. Doladit zadání AI návrhu popisu — sbírá se zpětná vazba
 
 Aleš 18. 9. po prvních zkouškách: **popis moc dlouhý** a **AI započítala věci

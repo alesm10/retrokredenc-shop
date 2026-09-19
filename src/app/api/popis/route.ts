@@ -14,7 +14,7 @@ const Navrh = z.object({
   nazev: z.string().describe('Název produktu: co to je, výrobce nebo místo výroby, dekor'),
   popis: z.string().describe('Popis pro e-shop, 3–5 vět, česky'),
   kategorie: z.enum(KATEGORIE),
-  rok: z.string().describe('Období výroby, např. "1970–1980"; prázdné, když nejde odhadnout'),
+  rok: z.string().describe('Období výroby jen když je doložené (značka, etiketa, dekor s jasným datem), ve tvaru "70. léta", "1960–1970" nebo "kolem 1950"; jinak prázdný řetězec — žádné „neuvedeno"'),
   overit: z.string().describe('Co má prodávající před uložením ověřit, česky, jedna až dvě věty'),
 })
 

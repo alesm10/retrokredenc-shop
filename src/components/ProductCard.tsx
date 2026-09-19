@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { obdobi } from '@/lib/obdobi'
 
 interface Product {
   id: string
@@ -28,7 +29,7 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
       <div className="p-4">
         <h3 className="text-lg font-serif mb-2 text-text">{product.name}</h3>
-        {product.year && <p className="text-sm text-gray-600 mb-2">Rok: {product.year}</p>}
+        {obdobi(product.year) && <p className="text-sm text-gray-600 mb-2">Období: {obdobi(product.year)}</p>}
         <p className="text-xl font-semibold text-primary">{product.price} Kč</p>
       </div>
     </Link>
