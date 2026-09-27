@@ -7,6 +7,38 @@ import { obdobi } from '@/lib/obdobi'
 
 const WEB = 'https://retrokredenc.cz'
 
+// Údaje pro Google: doprava a vracení. ⚠ Musí sedět s obchodními podmínkami —
+// poštovné 89–130 Kč podle dopravce + balné 60 Kč, osobní odběr zdarma.
+const DOPRAVA = {
+  '@type': 'OfferShippingDetails',
+  shippingRate: {
+    '@type': 'MonetaryAmount',
+    minValue: 149,
+    maxValue: 190,
+    currency: 'CZK',
+  },
+  shippingDestination: {
+    '@type': 'DefinedRegion',
+    addressCountry: 'CZ',
+  },
+  deliveryTime: {
+    '@type': 'ShippingDeliveryTime',
+    handlingTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 3, unitCode: 'DAY' },
+    transitTime: { '@type': 'QuantitativeValue', minValue: 1, maxValue: 4, unitCode: 'DAY' },
+  },
+}
+
+// 14 dnů na odstoupení, zboží posílá kupující zpět na vlastní náklady
+// (§ 5 obchodních podmínek, § 1829 občanského zákoníku)
+const VRACENI = {
+  '@type': 'MerchantReturnPolicy',
+  applicableCountry: 'CZ',
+  returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+  merchantReturnDays: 14,
+  returnMethod: 'https://schema.org/ReturnByMail',
+  returnFees: 'https://schema.org/ReturnShippingFees',
+}
+
 export const revalidate = 60
 
 interface Props {
@@ -63,6 +95,8 @@ export default async function ProductDetailPage({ params }: Props) {
       availability: product.available
         ? 'https://schema.org/InStock'
         : 'https://schema.org/OutOfStock',
+      shippingDetails: DOPRAVA,
+      hasMerchantReturnPolicy: VRACENI,
     },
   }
 

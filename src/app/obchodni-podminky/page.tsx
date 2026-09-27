@@ -38,9 +38,12 @@ export default function ObchodniPodminkyPage() {
 
         <h2 className="text-2xl font-serif mt-8 mb-4">4. Dodání zboží</h2>
         <p>
-          Zboží lze předat osobně nebo zaslat přepravní službou. Náklady na dopravu
-          jsou sděleny individuálně při potvrzení objednávky. Dodací lhůta je zpravidla
-          do 7 pracovních dnů od potvrzení objednávky.
+          Zboží lze zaslat přepravní službou nebo předat osobně. Poštovné činí
+          89–130 Kč podle zvoleného dopravce, balné 60 Kč — celkem tedy 149–190 Kč.
+          Konkrétní částku sdělíme při potvrzení objednávky podle váhy a rozměrů
+          zásilky. <strong>Osobní odběr v Doníně (Donín 18, 440 01 Louny) je po
+          domluvě zdarma.</strong> Dodací lhůta je zpravidla do 7 pracovních dnů
+          od potvrzení objednávky.
         </p>
 
         <h2 className="text-2xl font-serif mt-8 mb-4">5. Odstoupení od smlouvy</h2>
