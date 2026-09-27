@@ -70,6 +70,14 @@ maže — podle nich doladit zadání (`ZADANI` v `src/app/api/popis/route.ts`).
 
 ## Hotové
 
+### 14. ✅ Doprava a vracení v údajích pro Google — 27. 9. 2026
+
+Search Console upozornila na chybějící `shippingDetails` a
+`hasMerchantReturnPolicy`. Doplněno: doprava 149–190 Kč (poštovné 89–130 +
+balné 60), osobní odběr v Doníně zdarma, vrácení do 14 dnů. Stejná čísla jsou
+teď i v obchodních podmínkách. `review`, `aggregateRating` a GTIN se vědomě
+nedoplňují — viz `GOTCHAS.md`.
+
 ### 12. ✅ Návrh názvu a popisu z fotek (AI) — 18. 9. 2026
 
 Tlačítko v administraci; Claude z fotek navrhne název a popis pro vyhledávače,

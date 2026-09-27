@@ -124,6 +124,19 @@ Website v popisu repozitáře vede na `https://retrokredenc.cz`. Prostředí
   Při odeslání: **Úspěšné, 9 stránek** (4 stránky webu + 5 produktů).
 - Účet: Alešův Google účet (který, je v AIOS).
 
+## Údaje o zboží pro Google (structured data)
+
+Na stránce produktu (`src/app/produkty/[id]/page.tsx`) jsou v JSON-LD:
+použité zboží, úplné adresy, **doprava** (`DOPRAVA`, 149–190 Kč = poštovné
+89–130 + balné 60) a **vracení** (`VRACENI`, 14 dní, poštou, vratku platí
+kupující). ⚠ **Čísla musí sedět s obchodními podmínkami** — Google porovnává
+data se stránkou; když se cena dopravy změní, oprav obě místa.
+
+Search Console hlásila 26. 9. 2026 jako **nekritické**: chybí `review`,
+`aggregateRating`, globální identifikátor (GTIN/značka). **Vědomě se
+nedoplňují:** hodnocení web nemá a vymýšlet je nesmíme, čárový kód vintage
+kusy nemají. Doplní se samo, až budou skuteční zákazníci.
+
 ## Období výroby (dřív „rok", od 19. 9. 2026)
 
 Sloupec v databázi se dál jmenuje `year`, na webu i v administraci je to
