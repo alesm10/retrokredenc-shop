@@ -1,4 +1,9 @@
 import Link from 'next/link'
+import Rok from './Rok'
+
+// Rok sestavení — jen jako výchozí hodnota, než se v prohlížeči dopočítá
+// skutečný (viz Rok.tsx). Tohle číslo zamrznout SMÍ.
+const ROK_SESTAVENI = new Date().getFullYear()
 import SocialLinks from './SocialLinks'
 
 export default function Footer() {
@@ -54,7 +59,7 @@ export default function Footer() {
               Ochrana osobních údajů
             </Link>
           </div>
-          <p>&copy; {new Date().getFullYear()} Retro Kredenc. Všechna práva vyhrazena.</p>
+          <p>&copy; <Rok zaloha={ROK_SESTAVENI} /> Retro Kredenc. Všechna práva vyhrazena.</p>
         </div>
       </div>
     </footer>
