@@ -27,6 +27,11 @@ yarn-error.log*
 # local env files
 .env*.local
 .env
+# ⚠ Zálohy konfigurace, které nechá editor nebo ruční zásah — `.env*.local`
+# je NECHYTÁ, protože ten vzor hledá soubory KONČÍCÍ na `.local`.
+# Nalezeno 10. 10. 2026: na VPS ležel `.env.local.save` s hesly od 18. 9.
+# ⚠ Tenhle repozitář je VEŘEJNÝ; takový soubor by hesla vynesl na internet.
+.env*
 
 # vercel
 .vercel
