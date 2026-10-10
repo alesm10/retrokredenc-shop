@@ -41,7 +41,7 @@ export default function HeroImage() {
           console.log('Obrázek načten:', imageFormats[currentImage])
           setImageLoaded(true)
         }}
-        onError={(e) => {
+        onError={() => {
           console.log('Chyba načítání obrázku:', imageFormats[currentImage])
           // Zkusíme další formát, pokud tento neexistuje
           if (currentImage < imageFormats.length - 1) {

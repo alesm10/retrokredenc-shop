@@ -33,7 +33,7 @@ export default function ContactForm({ productId }: { productId?: string }) {
       } else {
         setStatus('error')
       }
-    } catch (error) {
+    } catch {
       setStatus('error')
     }
   }

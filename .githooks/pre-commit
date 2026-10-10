@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Kontrola kódu — vchod z gitu.
+#
+# Proč je logika v Node a ne tady: `/bin/sh` je na Windows Git Bash a na Macu
+# každý jiný, zatímco Node se chová stejně. Stejný důvod má i `pre-commit`
+# v AIOS. Tenhle soubor jen předává práci dál.
+#
+# ⚠ Aby ho git našel, musí být nastavené `core.hooksPath` na `.githooks`.
+# Je to nastavení PER KLON, takže na notebooku po `git clone` chybí a hook
+# tam tiše neexistuje. Nastavuje se jednou:
+#
+#     git -C ~/Data/karta-budovy config core.hooksPath .githooks
+#
+# Git hook běží vždycky, když commit proběhne v tomhle repozitáři — i když se
+# commituje přes `git -C` z okna nad AIOS, protože ho spouští git sám, ne
+# Claude Code.
+#
+# Obejít se dá `git commit --no-verify`.
+
+KOREN=$(git rev-parse --show-toplevel)
+
+[ -f "$KOREN/.githooks/kontrola-kodu.mjs" ] || exit 0
+
+exec node "$KOREN/.githooks/kontrola-kodu.mjs"
