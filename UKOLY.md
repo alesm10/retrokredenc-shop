@@ -70,6 +70,17 @@ maže — podle nich doladit zadání (`ZADANI` v `src/app/api/popis/route.ts`).
 
 ## Hotové
 
+### 16. ✅ Počítadlo návštěv a titulek pro vyhledávače — 26. 10. 2026
+
+Změřeno týž den: web je u Googlu **zaindexovaný** (včetně cen u produktů), ale
+na dotazy typu „hrnek kera vitral lesní jahody" nebo „Ditmar Urbach váza" se
+do 20. místa nedostane — tam jsou Aukro, Bazoš, Sellpy. Na „retro kredenc"
+vrací Google nábytkářské e-shopy, protože **kredenc je slovo pro nábytek**.
+
+Proto: titulek a klíčová slova míří na to, co lidé hledají (porcelán,
+keramika, jména výrobců), a na webu je počítadlo návštěv, aby šlo poznat,
+jestli propagace zabrala. Detail v `GOTCHAS.md`.
+
 ### 15. ✅ AI popisy doladěny podle Alešových úprav — 26. 10. 2026
 
 Zadání zkráceno (2–4 věty), dekor krátce, bez vycpávek o použití, hlídání

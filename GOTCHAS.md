@@ -143,6 +143,19 @@ Sloupec v databázi se dál jmenuje `year`, na webu i v administraci je to
 **„Období"** (nepovinné). Hodnoty jako „neuvedeno", „nevím", „?" web bere jako
 prázdné a nic nezobrazí — `src/lib/obdobi.ts`. Data se kvůli tomu neměnila.
 
+## Počítadlo návštěv (od 26. 10. 2026)
+
+Bez cookies, bez IP adres. Ukládá jen čas, stránku, doménu odkud člověk přišel
+a mobil/počítač — `src/lib/navstevy.ts`, data v `navstevy/RRRR-MM.jsonl`
+na serveru (v `.gitignore`, **nezálohuje se skriptem `zaloha-db.sh`**).
+
+- ⚠ **Hlásí se z prohlížeče** (`src/components/Pocitadlo.tsx`), ne ze serveru:
+  stránky mají `revalidate = 60`, takže serverový zápis by kešované návštěvy
+  minul. Vedlejší užitek: roboti skript většinou nespustí.
+- Hlásí se se zpožděním 1,5 s, kdo hned odskočí, se nepočítá. `/admin` ne.
+- **Přehled vidí Aleš v administraci** („Návštěvnost za 30 dní"); API
+  `GET /api/navsteva` je chráněné stejným heslem jako zbytek administrace.
+
 ## AI popisy: zákaz v zadání nestačí, musí ho vynutit kód (26. 10. 2026)
 
 Aleš dodal věty, které z návrhů maže. Podle nich se zadání zkrátilo (2–4 věty),
