@@ -70,6 +70,12 @@ maže — podle nich doladit zadání (`ZADANI` v `src/app/api/popis/route.ts`).
 
 ## Hotové
 
+### 15. ✅ AI popisy doladěny podle Alešových úprav — 26. 10. 2026
+
+Zadání zkráceno (2–4 věty), dekor krátce, bez vycpávek o použití, hlídání
+překlepů a mezer. Slovo „střep“ a hádaný materiál navíc **kontroluje kód**
+a vynutí si opravu — zadání samo nestačilo (detail v `GOTCHAS.md`).
+
 ### 14. ✅ Doprava a vracení v údajích pro Google — 27. 9. 2026
 
 Search Console upozornila na chybějící `shippingDetails` a

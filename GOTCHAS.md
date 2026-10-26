@@ -143,6 +143,21 @@ Sloupec v databázi se dál jmenuje `year`, na webu i v administraci je to
 **„Období"** (nepovinné). Hodnoty jako „neuvedeno", „nevím", „?" web bere jako
 prázdné a nic nezobrazí — `src/lib/obdobi.ts`. Data se kvůli tomu neměnila.
 
+## AI popisy: zákaz v zadání nestačí, musí ho vynutit kód (26. 10. 2026)
+
+Aleš dodal věty, které z návrhů maže. Podle nich se zadání zkrátilo (2–4 věty),
+dekor se pojmenovává krátce („dekor lesní jahody“) a vypadly vycpávky typu
+„hodí se na polévku, kávu i jako dekorace do kredence“.
+
+⚠ **Dvě pravidla model porušil i po výslovném zákazu, dvakrát za sebou:**
+slovo **„střep“** a **hádání materiálu** (psal „porcelánový hrnek“ u keramiky
+Kera Vitral). Proto je v `route.ts` funkce `vady()`: najde-li v popisu „střep“
+nebo materiál, který prodávající nepotvrdila, **server si jednou vyžádá
+opravu** (druhé volání modelu). Po třetí zkoušce byl text čistý.
+
+🔑 **Co z toho plyne obecně:** co musí platit vždy, nepatří do zadání pro
+model, ale do kódu kolem něj. Zadání je prosba, kontrola je pravidlo.
+
 ## Návrh popisu z fotek — Claude API (od 18. 9. 2026)
 
 - Tlačítko **„✨ Navrhnout název a popis z fotek"** v administraci pošle až
