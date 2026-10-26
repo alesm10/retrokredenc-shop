@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# počítadlo návštěv (data, na server se nekopíruje z gitu)
+/navstevy/

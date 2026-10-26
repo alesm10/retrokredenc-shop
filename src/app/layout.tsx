@@ -2,16 +2,17 @@ import type { Metadata } from 'next'
 import '../styles/globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import Pocitadlo from '@/components/Pocitadlo'
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://retrokredenc.cz'),
-  title: 'Retro Kredenc - Krása starých časů | Poklady které nezestárly',
-  description: 'Krása starých časů - Poklady které nezestárly. Objevte krásu retro československého porcelánu z let 1950-1989. Originální hrnečky, talířky a další kousky z dob Československa.',
-  keywords: 'retro porcelán, československý porcelán, retro hrnečky, retro talířky, vintage porcelán, Československo 50-89, poklady které nezestárly',
+  title: 'Retro Kredenc — československý porcelán a retro keramika z let 1950–1989',
+  description: 'Originální československý porcelán, retro keramika a sklo z let 1950–1989 — hrnky, talíře, vázy, džbány i celé soupravy. Každý kus je originál, pečlivě vybraný a vyfocený.',
+  keywords: 'retro porcelán, československý porcelán, retro keramika, retro hrnky, retro talíře, vintage porcelán, ČSSR porcelán, Ditmar Urbach, Kera Vitral, Dubí, Horní Slavkov',
   authors: [{ name: 'Retro Kredenc' }],
   openGraph: {
-    title: 'Retro Kredenc - Krása starých časů | Poklady které nezestárly',
-    description: 'Krása starých časů - Poklady které nezestárly. Objevte krásu retro československého porcelánu z let 1950-1989',
+    title: 'Retro Kredenc — československý porcelán a retro keramika',
+    description: 'Originální československý porcelán, keramika a sklo z let 1950–1989. Každý kus je originál.',
     type: 'website',
     locale: 'cs_CZ',
     siteName: 'Retro Kredenc',
@@ -41,6 +42,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Pocitadlo />
       </body>
     </html>
   )
