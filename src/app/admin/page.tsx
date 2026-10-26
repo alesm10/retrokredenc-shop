@@ -66,6 +66,13 @@ async function fotkaProAI(zdroj: Blob): Promise<string> {
 }
 
 type NavrhAI = { nazev: string; popis: string; kategorie: string; rok: string; overit: string }
+type Navstevy = {
+  zobrazeni: number
+  mobil: number
+  dny: Record<string, number>
+  stranky: Record<string, number>
+  zdroje: Record<string, number>
+}
 
 export default function AdminPage() {
   const [key, setKey] = useState('')
@@ -84,13 +91,14 @@ export default function AdminPage() {
   const [message, setMessage] = useState('')
   const [navrhuje, setNavrhuje] = useState(false)
   const [overit, setOverit] = useState('')
+  const [navstevy, setNavstevy] = useState<Navstevy | null>(null)
 
   useEffect(() => {
     const saved = localStorage.getItem('adminKey')
     if (!saved) return
     // Uložené heslo může být staré (po výměně hesla) — ověřit, ne jen převzít
     fetch('/api/admin', { headers: { 'x-admin-key': saved } }).then(res => {
-      if (res.ok) { setKey(saved); setAuthenticated(true); loadProducts() }
+      if (res.ok) { setKey(saved); setAuthenticated(true); loadProducts(); loadNavstevy(saved) }
       else localStorage.removeItem('adminKey')
     })
   }, [])
@@ -98,6 +106,11 @@ export default function AdminPage() {
   async function loadProducts() {
     const res = await fetch('/api/products')
     if (res.ok) setProducts(await res.json())
+  }
+
+  async function loadNavstevy(adminKey: string) {
+    const res = await fetch('/api/navsteva', { headers: { 'x-admin-key': adminKey } })
+    if (res.ok) setNavstevy(await res.json())
   }
 
   function odhlasit() {
@@ -121,6 +134,7 @@ export default function AdminPage() {
     localStorage.setItem('adminKey', key)
     setAuthenticated(true)
     loadProducts()
+    loadNavstevy(key)
   }
 
   function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -461,6 +475,48 @@ export default function AdminPage() {
             )}
           </form>
         </div>
+
+        {/* Návštěvnost — bez cookies, roboti se nepočítají */}
+        {navstevy && (
+          <div className="bg-white rounded-xl shadow p-6">
+            <h2 className="text-xl font-serif mb-1">Návštěvnost za 30 dní</h2>
+            <p className="text-sm text-gray-500 mb-4">
+              Počítají se jen lidé — roboti vyhledávačů ne. Bez cookies, bez IP adres.
+            </p>
+            <div className="flex gap-6 mb-4">
+              <div>
+                <div className="text-3xl font-semibold text-primary">{navstevy.zobrazeni}</div>
+                <div className="text-sm text-gray-500">zobrazení stránek</div>
+              </div>
+              <div>
+                <div className="text-3xl font-semibold text-primary">{navstevy.mobil}</div>
+                <div className="text-sm text-gray-500">z toho z mobilu</div>
+              </div>
+            </div>
+            {navstevy.zobrazeni === 0 ? (
+              <p className="text-gray-500">Zatím nikdo — počítá se od nasazení 26. 10. 2026.</p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+                <div>
+                  <h3 className="font-medium mb-2">Odkud lidé přišli</h3>
+                  {Object.entries(navstevy.zdroje).map(([k, v]) => (
+                    <div key={k} className="flex justify-between border-b py-1">
+                      <span>{k}</span><span className="text-gray-600">{v}</span>
+                    </div>
+                  ))}
+                </div>
+                <div>
+                  <h3 className="font-medium mb-2">Nejčtenější stránky</h3>
+                  {Object.entries(navstevy.stranky).slice(0, 8).map(([k, v]) => (
+                    <div key={k} className="flex justify-between border-b py-1">
+                      <span className="truncate mr-2">{k}</span><span className="text-gray-600">{v}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Seznam produktů */}
         <div className="bg-white rounded-xl shadow p-6">
