@@ -17,6 +17,7 @@ export type Product = {
   year: string
   available: boolean
   created_at: string
+  updated_at: string
   product_number: number
   product_images: ProductImage[]
 }

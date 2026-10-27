@@ -3,6 +3,7 @@ import path from 'path'
 import fs from 'fs/promises'
 import pool from '@/lib/db'
 import { overAdmina } from '@/lib/overeni'
+import { ohlasZmenu } from '@/lib/indexnow'
 
 // Jen tyhle sloupce se smí měnit — název sloupce jde přímo do SQL
 const POVOLENA_POLE = ['name', 'description', 'price', 'category', 'year', 'available']
@@ -25,7 +26,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
     if (fields.length > 0) {
       const setClauses = fields.map((f, i) => `${f} = $${i + 1}`).join(', ')
       await client.query(
-        `UPDATE products SET ${setClauses} WHERE id = $${fields.length + 1}`,
+        `UPDATE products SET ${setClauses}, updated_at = now() WHERE id = $${fields.length + 1}`,
         [...fields.map((f) => body[f]), id]
       )
     }
@@ -59,7 +60,18 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       }
     }
 
+    // Jiné pořadí nebo jiné fotky je pro čtenáře i pro vyhledávač změna stránky,
+    // i když se nezměnilo jediné textové pole
+    if (Array.isArray(fotky) || (Array.isArray(images) && images.length > 0)) {
+      await client.query('UPDATE products SET updated_at = now() WHERE id = $1', [id])
+    }
+
+    const { rows: cislo } = await client.query(
+      'SELECT product_number FROM products WHERE id = $1',
+      [id]
+    )
     await client.query('COMMIT')
+    if (cislo[0]) ohlasZmenu([`/produkty/${cislo[0].product_number}`])
   } catch (e: any) {
     await client.query('ROLLBACK')
     return NextResponse.json({ error: e.message }, { status: 500 })

@@ -4,6 +4,7 @@ import fs from 'fs/promises'
 import pool from '@/lib/db'
 import { getProducts } from '@/lib/produkty'
 import { overAdmina } from '@/lib/overeni'
+import { ohlasZmenu } from '@/lib/indexnow'
 
 export async function GET() {
   try {
@@ -43,6 +44,7 @@ export async function POST(request: NextRequest) {
     }
 
     await client.query('COMMIT')
+    ohlasZmenu([`/produkty/${product.product_number}`])
     return NextResponse.json(product)
   } catch (e: any) {
     await client.query('ROLLBACK')
