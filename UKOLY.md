@@ -22,6 +22,13 @@ při kompletní revizi. Ta revize proběhla 18. 9. (bod 6).
 
 ## Otevřené
 
+### 18. Zranitelné knihovny — `npm audit` hlásí 6 (1 kritická)
+
+Zjištěno 27. 10. 2026 při nasazení: `next` (kritická), `zod`, `source-map-js`,
+`sharp` a další. 18. 9. bylo hlášení čisté. `npm audit fix` je podle npm
+dostupná u všech — chce to spustit, sestavit a nasadit stejným postupem jako
+jindy, ne naslepo.
+
 ### 8. Propagace webu — nápad, zatím se nestaví
 
 Automatizovat se to dá (na VPS už běží n8n): nové zboží samo na Facebook
@@ -69,6 +76,15 @@ maže — podle nich doladit zadání (`ZADANI` v `src/app/api/popis/route.ts`).
 ---
 
 ## Hotové
+
+### 17. ✅ Mapa webu říká pravdu + IndexNow pro Seznam — 27. 10. 2026
+
+Mapa webu hlásila u stálých stránek „změněno právě teď" při každém
+přegenerování (každou hodinu) a u produktů datum vzniku místo úpravy — Google
+tedy neviděl přepsané popisy z 26. 10. Opraveno sloupcem `updated_at`
+a pevnými daty u stálých stránek. Navíc se nové a upravené zboží samo ohlásí
+vyhledávačům přes IndexNow (**Seznam**, Bing a další — Google ho nepodporuje).
+Detail v `GOTCHAS.md`.
 
 ### 16. ✅ Počítadlo návštěv a titulek pro vyhledávače — 26. 10. 2026
 

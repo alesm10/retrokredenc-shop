@@ -143,6 +143,61 @@ Sloupec v databázi se dál jmenuje `year`, na webu i v administraci je to
 **„Období"** (nepovinné). Hodnoty jako „neuvedeno", „nevím", „?" web bere jako
 prázdné a nic nezobrazí — `src/lib/obdobi.ts`. Data se kvůli tomu neměnila.
 
+## Datum v mapě webu musí říkat pravdu (opraveno 27. 10. 2026)
+
+⛔ **Do 27. 10. mapa webu lhala a Google to stálo pozornost.** Titulní strana,
+katalog, O nás a Kontakt měly `lastModified: new Date()`, tedy čas
+přegenerování — a to se děje **každou hodinu**. Google na nespolehlivé datum
+reaguje tak, že `lastmod` **přestane brát v potaz u celého webu**. Produkty
+zase hlásily `created_at`, takže popisy přepsané 26. 10. vypadaly jako
+nezměněné od 23. 9.
+
+Co se změnilo:
+- databáze má sloupec `products.updated_at` (migrace 27. 10., u starých
+  záznamů dorovnaný na `created_at`);
+- `PATCH /api/products/[id]` ho nastavuje — **i když se mění jen pořadí nebo
+  výměna fotek**, protože i to je pro čtenáře jiná stránka;
+- stálé stránky (`o-nas`, `kontakt`) mají pevné datum poslední skutečné úpravy;
+- titulní strana a katalog dědí datum nejčerstvějšího produktu — vypisují zboží,
+  takže se mění s ním.
+
+⚠ **Když se bude přidávat další stálá stránka, nedávej jí `new Date()`.**
+
+## IndexNow — ohlášení Seznamu, ne Googlu (od 27. 10. 2026)
+
+Při uložení i úpravě produktu web sám ohlásí adresu na
+`https://api.indexnow.org/indexnow` (`src/lib/indexnow.ts`). Odpověď **202**
+znamená přijato; ověřuje se až potom podle klíčového souboru.
+
+- Klíč leží veřejně v `public/d4c67b7efdae8bd5e208c71bd51cae45.txt` a **musí
+  zůstat dostupný** — bez něj vyhledávač ohlášení zahodí. Není to tajemství,
+  je to jen doklad, že web patří tomu, kdo hlásí.
+- Volání je „pošli a nečekej" — chyba se jen zaloguje, uložení produktu nikdy
+  neshodí.
+- ⛔ **Google IndexNow nepodporuje** (ověřeno 27. 10. 2026 v soupisu na
+  `indexnow.org/searchengines.json`: bing, yandex, **seznam**, naver, yep,
+  internetarchive, amazonbot). Googlu se o nové stránce říká **jedině mapou
+  webu**; jeho Indexing API se podle jeho vlastní dokumentace smí použít jen
+  pro pracovní inzeráty a živé přenosy, nic jiného.
+
+## Co Google o webu ví (změřeno 27. 10. 2026)
+
+Na dotaz „stare hrnky československo" web **není do 30. místa** — tam jsou
+Aukro (i placeně), Bazoš, Sbazar, Fler, Taranis. `site:retrokredenc.cz` vrací
+asi 10 stránek, mezi nimi **žádnou s hrnky**: pět produktů s hrnky (č. 3, 8, 9,
+10, 13) je v mapě webu objevených, ale **nezaindexovaných**. Aleš je 27. 10.
+poslal ručně přes *Kontrola adresy URL → Požádat o indexování*.
+
+🔑 **Objevená stránka ≠ zaindexovaná stránka.** Search Console to rozlišuje
+v *Indexování → Stránky*; `site:` hledání je slabší měřidlo.
+
+## www.retrokredenc.cz vrací stránku, nepřesměrovává (zjištěno 27. 10. 2026)
+
+`https://www.retrokredenc.cz/` odpoví 200 místo přesměrování na adresu bez www,
+takže Google některé stránky zná pod www a jiné bez. **Neškodí to**, protože
+kanonická adresa v hlavičce ukazuje správně na verzi bez www (ověřeno na
+`/produkty/19`). Čistá oprava je přesměrování 301 v nginx — zatím neuděláno.
+
 ## Počítadlo návštěv (od 26. 10. 2026)
 
 Bez cookies, bez IP adres. Ukládá jen čas, stránku, doménu odkud člověk přišel
