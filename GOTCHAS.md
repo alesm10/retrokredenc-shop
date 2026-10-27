@@ -191,12 +191,27 @@ poslal ručně přes *Kontrola adresy URL → Požádat o indexování*.
 🔑 **Objevená stránka ≠ zaindexovaná stránka.** Search Console to rozlišuje
 v *Indexování → Stránky*; `site:` hledání je slabší měřidlo.
 
-## www.retrokredenc.cz vrací stránku, nepřesměrovává (zjištěno 27. 10. 2026)
+## www → bez www, trvalé přesměrování (od 27. 10. 2026)
 
-`https://www.retrokredenc.cz/` odpoví 200 místo přesměrování na adresu bez www,
-takže Google některé stránky zná pod www a jiné bez. **Neškodí to**, protože
-kanonická adresa v hlavičce ukazuje správně na verzi bez www (ověřeno na
-`/produkty/19`). Čistá oprava je přesměrování 301 v nginx — zatím neuděláno.
+Do 27. 10. odpovídaly obě adresy stránkou (kód 200) a Google si web dělil na
+dvě verze; kanonická adresa to kryla, ale čisté to nebylo. Nastavení nginx má
+teď tři bloky: **www na 443 vrací 301** na adresu bez www, hlavní blok
+obsluhuje jen adresu bez www a nešifrovaný provoz jde **rovnou na konečnou
+adresu** (dřív přes dvě přesměrování).
+
+Ověřeno zvenku týž den: `https://www.…/produkty/10` → 301 s cílem
+`https://retrokredenc.cz/produkty/10`, prohlížeč dojde **jedním skokem**,
+adresa bez www vrací 200. Záloha původního nastavení leží na serveru vedle:
+`/etc/nginx/sites-available/retrokredenc.zaloha-2026-10-27`.
+
+⚠ **Certifikát pokrývá obě jména** (`retrokredenc.cz` i `www.…`) — kdyby se
+někdy obnovoval jen na jedno, přesměrování www přestane jít navázat.
+⚠ Soubor upravuje i **Certbot** při obnově přes `--nginx`; komentáře
+`# managed by Certbot` v blocích jsou proto schválně zachované.
+
+ℹ️ `sudo nginx -t` hlásí varování *„protocol options redefined for [::]:443"*
+u **n8n** — s retrokredencí nesouvisí (její blok IPv6 vůbec neobsluhuje),
+plyne ze souběhu `jaktopim` s `ipv6only=on` a ostatních webů na témže portu.
 
 ## Počítadlo návštěv (od 26. 10. 2026)
 
