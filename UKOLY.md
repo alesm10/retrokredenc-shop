@@ -22,13 +22,6 @@ při kompletní revizi. Ta revize proběhla 18. 9. (bod 6).
 
 ## Otevřené
 
-### 18. Zranitelné knihovny — `npm audit` hlásí 6 (1 kritická)
-
-Zjištěno 27. 10. 2026 při nasazení: `next` (kritická), `zod`, `source-map-js`,
-`sharp` a další. 18. 9. bylo hlášení čisté. `npm audit fix` je podle npm
-dostupná u všech — chce to spustit, sestavit a nasadit stejným postupem jako
-jindy, ne naslepo.
-
 ### 8. Propagace webu — nápad, zatím se nestaví
 
 Automatizovat se to dá (na VPS už běží n8n): nové zboží samo na Facebook
@@ -76,6 +69,19 @@ maže — podle nich doladit zadání (`ZADANI` v `src/app/api/popis/route.ts`).
 ---
 
 ## Hotové
+
+### 18. ✅ Zranitelné knihovny opraveny — 27. 10. 2026
+
+`npm audit` hlásil 6 zranitelností (1 kritickou přímo v Next.js). Po `npm audit
+fix` je hlášení **čisté, 0 zranitelností** — na Macu i na serveru. Posunuly se
+jen zámky verzí (`next` 16.3.8 → 16.4.3, `zod` 4.6.6 → 4.6.7, `sharp` 0.35.5,
+`source-map-js` 1.2.2), `package.json` se neměnil.
+
+Vyzkoušeno na kopii vedle živého webu před nasazením: sestavení, titulní
+strana, katalog, detail produktu, mapa webu, klíčový soubor IndexNow,
+přihlášení do administrace (špatné heslo 401 / správné 200), výpis produktů
+a **návrh popisu z fotky přes Claude API** (kvůli posunu `zod`, na kterém
+stojí). Po nasazení ověřeno zvenku.
 
 ### 17. ✅ Mapa webu říká pravdu + IndexNow pro Seznam — 27. 10. 2026
 
